@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ChargingStation.Test.Unit\ChargingStation.Test.Unit.csproj" />
+    <ProjectReference Include="..\ChargingStationClassLib\ChargingStationClassLib.csproj" />
+  </ItemGroup>
+
+</Project>
