@@ -8,5 +8,8 @@ namespace ChargingStationClassLib.Models
 {
     interface IDoor
     {
+        public void LockDoor();
+        public void UnlockDoor();
+
     }
 }
