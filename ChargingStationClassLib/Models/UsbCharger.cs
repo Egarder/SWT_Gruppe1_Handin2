@@ -3,7 +3,7 @@ using System.Timers;
 
 namespace ChargingStationClassLib.Models
 {
-    public class UsbChargerSimulator : IUsbCharger
+    public class UsbCharger : IUsbCharger
     {
         // Constants
         private const double MaxCurrent = 500.0; // mA
@@ -23,7 +23,7 @@ namespace ChargingStationClassLib.Models
         private System.Timers.Timer _timer;
         private int _ticksSinceStart;
 
-        public UsbChargerSimulator()
+        public UsbCharger()
         {
             CurrentValue = 0.0;
             Connected = true;

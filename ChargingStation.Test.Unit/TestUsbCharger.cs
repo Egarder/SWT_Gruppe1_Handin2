@@ -10,13 +10,13 @@ using ChargingStationClassLib.Models;
 namespace ChargingStation.Test.Unit
 {
     [TestFixture]
-    public class TestUsbChargerSimulator
+    public class TestUsbCharger
     {
-        private UsbChargerSimulator _uut;
+        private UsbCharger _uut;
         [SetUp]
         public void Setup()
         {
-            _uut = new UsbChargerSimulator();
+            _uut = new UsbCharger();
         }
 
         [Test]
