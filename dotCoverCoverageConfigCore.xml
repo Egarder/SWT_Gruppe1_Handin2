@@ -9,7 +9,7 @@
   <InheritConsole><!-- [True|False] Lets the application being analysed to inherit dotCover console. True by default. --> </InheritConsole>
   
   <!-- Coverage filters. It's possible to use asterisks as wildcard symbols.
-  -->
+  -->https://blackboard.au.dk/bbcswebdav/pid-3028288-dt-content-rid-10768765_1/courses/BB-Cou-UUVA-94495/Handin2/I4SWTHandin2.pdf
   <Filters>
     <IncludeFilters>
     </IncludeFilters>
