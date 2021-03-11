@@ -9,6 +9,7 @@ using NUnit.Framework;
 
 namespace ChargingStation.Test.Unit
 {
+    [TestFixture]
     class TestStationController
     {
         private StationControl _uut;
@@ -22,9 +23,9 @@ namespace ChargingStation.Test.Unit
         [SetUp]
         public void setup()
         {
-            _logfile = new LogFile();
+            _logfile = Substitute.For<ILogFile>();
             _display = new Display();
-            _door = Substitute.For<IDoor>();
+            _door = new Door();
             _rfid = Substitute.For<IRFIDReader>();
             _usbccharge = Substitute.For<IUsbCharger>();
             _chargecontrol = new ChargeControl(_usbccharge);
@@ -58,13 +59,32 @@ namespace ChargingStation.Test.Unit
         [Test]
         public void DoorClosed_ChargingStateAvailableUSBChargerConnected_DoorLocked()
         {
+            // Arrange
+            _door.Closed = false;
             _uut.State = StationControl.ChargingStationState.Available;
             _usbccharge.Connected = true;
-            
 
+            // Act
             _door.CloseDoor();
+
+            // Assert
+            _door.Received(1).CloseDoor();
         }
 
+        [Test]
+        public void DoorClosed_ChargingStateAvailableUSBChargerConnected_WrittenToLog()
+        {
+            // Arrange
+            _door.Closed = false;
+            _uut.State = StationControl.ChargingStationState.Available;
+            _usbccharge.Connected = true;
+
+            // Act
+            _door.CloseDoor();
+
+            // Assert
+            _logfile.Received(1).WriteToLog(Arg.Any<string>());
+        }
 
         //if (!e.HasOpened && _state == ChargingStationState.Available && _usbCharger.Connected)
         //{
