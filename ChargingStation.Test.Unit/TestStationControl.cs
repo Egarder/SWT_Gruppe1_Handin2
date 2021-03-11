@@ -34,12 +34,17 @@ namespace ChargingStation.Test.Unit
 
 
         //RFID Handler tests
-        [Test]
-        public void RFIDEventhandler_stateAvailable_oldIdIsSet()
+        [TestCase(50)]
+        [TestCase(1234)]
+        public void RFIDEventhandler_stateAvailable_oldIdIsSet(int id)
         {
-            _rfid.CardID = 50;
+            _uut.
 
-            Assert.That(_uut.OldId, Is.EqualTo(50));
+            //Act:
+            _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs {ID = id});
+
+           //Assert:
+            Assert.That(_uut.OldId, Is.EqualTo(id));
         }
 
         [Test]

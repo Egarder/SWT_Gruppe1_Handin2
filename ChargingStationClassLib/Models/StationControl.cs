@@ -51,6 +51,7 @@ namespace ChargingStationClassLib.Models
         public int OldId
         {
             get { return _oldId; }
+            set { _oldId = value; }
         }
 
 
