@@ -88,7 +88,7 @@ namespace ChargingStation.Test.Unit
             _door.CloseDoor();
 
             // Assert
-            _logfile.Received(1).WriteToLog(Arg.Any<string>());
+            _logfile.Received(1).WriteToLog(Arg.Any<string>(),DateTime.Now);
         }
 
         //if (!e.HasOpened && _state == ChargingStationState.Available && _usbCharger.Connected)
@@ -110,7 +110,7 @@ namespace ChargingStation.Test.Unit
         public void ChargeChanged_CurrentUnderFiveShowMessage_WriteLog()
         {
             _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
-            _logfile.Received(1).WriteToLog("");
+            _logfile.Received(1).WriteToLog("",DateTime.Now);
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace ChargingStation.Test.Unit
         public void ChargeChanged_CurrentOverFiveHundredShowMessage_WriteLog()
         {
             _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 502 });
-            _logfile.Received(1).WriteToLog("");
+            _logfile.Received(1).WriteToLog("",DateTime.Now);
         }
 
     }

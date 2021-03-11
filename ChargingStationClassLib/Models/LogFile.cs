@@ -14,6 +14,6 @@ namespace ChargingStationClassLib.Models
             LogList.Add(new Log {LogText = message,TimeStamp = timeStamp});
         }
 
-        public List<ILog> LogList { get; set; }
+        public List<ILog> LogList { get; set; } = new List<ILog>();
     }
 }
