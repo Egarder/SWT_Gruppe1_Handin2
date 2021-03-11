@@ -13,6 +13,7 @@ namespace ChargingStationClassLib.Models
         {
             _door = door;
             _charger = charger;
+            _log = log;
         }
 
 
@@ -29,6 +30,7 @@ namespace ChargingStationClassLib.Models
         private IUsbCharger _charger;
         private IDoor _door;
         private int _oldId;
+        private int _id;
 
         private string logFile = "logfile.txt"; // Navnet på systemets log-fil
 
@@ -88,15 +90,6 @@ namespace ChargingStationClassLib.Models
             }
         }
 
-        private void DoorMovementDetectedet(Object o, DoorMoveEventArgs e)
-        {
-            if (e.HasOpened)
-                Console.WriteLine("Door opened");
 
-            else if (!e.HasOpened)
-                Console.WriteLine("Door closed");
-        }
-
-        private void 
     }
 }

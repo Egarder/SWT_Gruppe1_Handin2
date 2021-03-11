@@ -76,5 +76,6 @@ namespace ChargingStationClassLib.Models
         {
             DoorLockEvent?.Invoke(this, e);
         }
+
     }
 }
