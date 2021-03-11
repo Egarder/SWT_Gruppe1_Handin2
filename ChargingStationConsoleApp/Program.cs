@@ -14,8 +14,9 @@ namespace ChargingStationConsoleApp
             ILogFile logFile = new LogFile();
             IUsbCharger usbCharger = new UsbCharger();
             IChargeControl chargeControl = new ChargeControl(usbCharger);
+            IDisplay display = new Display();
 
-            StationControl stationController = new StationControl(door, logFile, rfidReader, chargeControl, usbCharger);
+            StationControl stationController = new StationControl(door, logFile, rfidReader, chargeControl, usbCharger,display);
 
             bool finish = false;
             do
