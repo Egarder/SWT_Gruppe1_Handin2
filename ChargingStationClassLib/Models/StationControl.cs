@@ -14,6 +14,7 @@ namespace ChargingStationClassLib.Models
             _door = door;
             _log = log;
             _rfid = rfid;
+            _usbCharger = usbCharger;
             _chargeControl = chargeControl;
 
             _usbCharger.ChargeEvent += ChargerHandleEvent;

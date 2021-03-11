@@ -8,8 +8,6 @@ namespace ChargingStationClassLib.Models
 {
     public interface IDoor
     {
-        public event EventHandler<DoorLockEventArgs> DoorLockEvent;
-
         public event EventHandler<DoorMoveEventArgs> DoorMoveEvent;
 
         public void OpenDoor();
@@ -19,5 +17,8 @@ namespace ChargingStationClassLib.Models
         public void LockDoor();
 
         public void UnlockDoor();
+
+        public bool Locked { get; set; }
+        public bool Closed { get; set; }
     }
 }

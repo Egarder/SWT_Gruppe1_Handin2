@@ -27,7 +27,7 @@ namespace ChargingStationClassLib.Models
                     {
                         if (value != cardID)
                         {
-                            OnScanEvent(new ScanEventArgs { ID = value }); //Notifies when cardID is set
+                            OnScanEvent(this, new ScanEventArgs { ID = value }); //Notifies when cardID is set
                             cardID = value;
                         }
                     }
@@ -42,7 +42,7 @@ namespace ChargingStationClassLib.Models
             } 
         }
 
-        protected virtual void OnScanEvent(ScanEventArgs e)
+        protected virtual void OnScanEvent(Object o, ScanEventArgs e)
         {
             ScanEvent?.Invoke(this,e);
         }
