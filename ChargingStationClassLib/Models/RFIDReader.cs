@@ -43,7 +43,7 @@ namespace ChargingStationClassLib.Models
             } 
         }
 
-        protected virtual void OnScanEvent(Object o, ScanEventArgs e)
+        protected virtual void OnScanEvent(ScanEventArgs e)
         {
             ScanEvent?.Invoke(this,e);
         }
