@@ -86,9 +86,9 @@ namespace ChargingStationClassLib.Models
             }
         }
 
-        private void DoorClosedHandleEvent(object o, DoorMoveEventArgs e)
+        private void DoorClosedHandleEvent(object o, DoorMoveEventArgs door)
         {
-            if (!e.HasOpened && _state == ChargingStationState.Available && _usbCharger.Connected)
+            if (door.HasClosed && _state == ChargingStationState.Available && _usbCharger.Connected)
             {
                 _door.LockDoor();
                 _chargeControl.StartCharge();
@@ -96,12 +96,12 @@ namespace ChargingStationClassLib.Models
                 _state = ChargingStationState.Locked;
             }
 
-            else if (!e.HasOpened && _state == ChargingStationState.Available && !_usbCharger.Connected)
+            else if (door.HasClosed && _state == ChargingStationState.Available && !_usbCharger.Connected)
             {
                 message = "Please connect phone";
             }
 
-            else if (!e.HasOpened && _state == ChargingStationState.Locked)
+            else if (door.HasClosed && _state == ChargingStationState.Locked)
             {
                 _state = ChargingStationState.Available;
             }
