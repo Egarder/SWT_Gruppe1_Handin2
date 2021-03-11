@@ -23,8 +23,9 @@ namespace ChargingStation.Test.Unit
         {
             _uut = new LogFile();
             _dateTime = new DateTime(2010, 8, 18);
-            _dateTime = new DateTime(2010, 8, 18);
+            _dateTime2 = new DateTime(2012, 1, 24);
         }
+
 
         [TestCase("Denne linje er flot")]
         public void WriteToLog_1Item_ListContains1Item(string text)
@@ -40,6 +41,23 @@ namespace ChargingStation.Test.Unit
             _uut.WriteToLog(text1, _dateTime);
             Assert.That(_uut.LogList.Count, Is.EqualTo(2));
         }
+
+        [TestCase("Denne linje er lang", "Denne linje er flot")]
+        [TestCase("Denne linje er flot", "Denne linje er lang")]
+        public void WriteToLog_2Items_ListContainsCorrectElements(string text1, string text2)
+        {
+            _uut.WriteToLog(text1, _dateTime);
+            _uut.WriteToLog(text2, _dateTime2);
+            Assert.Multiple(() =>
+            {
+                Assert.That(_uut.LogList[1].LogText, Is.EqualTo(text2));
+                Assert.That(_uut.LogList[0].LogText, Is.EqualTo(text1));
+                Assert.That(_uut.LogList[0].TimeStamp, Is.EqualTo(_dateTime));
+                Assert.That(_uut.LogList[1].TimeStamp, Is.EqualTo(_dateTime2));
+            });
+            
+        }
+
     }
 
 }
