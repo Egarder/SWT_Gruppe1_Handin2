@@ -8,6 +8,7 @@ using Microsoft.VisualBasic.CompilerServices;
 namespace ChargingStationClassLib.Models
 {
     public interface ILogFile
-    {
+    { 
+        public void WriteToFile(string text);
     }
 }

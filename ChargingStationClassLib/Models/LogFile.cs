@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,6 +19,10 @@ namespace ChargingStationClassLib.Models
             //door.DoorMoveEvent += DoorMoveEventHandler;
         }
 
+        public async void WriteToFile(string text)
+        {
+            await WriteToFileTask(text);
+        }
         //private void ScanEventHandler(object o, ScanEventArgs e)
         //{
         //    _ = WriteToFile("RFID Card ID:" + e.ID.ToString());
@@ -32,7 +37,7 @@ namespace ChargingStationClassLib.Models
         //{
         //    _ = WriteToFile("Door Is locked: " + e.IsLocked.ToString());
         //}
-        public async Task WriteToFile(string text)
+        public async Task WriteToFileTask(string text)
         {
             await using StreamWriter file = new(FileName, append: true);
             await file.WriteLineAsync(DateTime.Now.ToShortDateString() + ": " + text);
