@@ -138,27 +138,40 @@ namespace ChargingStation.Test.Unit
         public void ChargeChanged_CurrentUnderFiveShowMessage_ShowMessage()
         {
             _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
-            _display.Received(1).ShowMessage(Arg.Any<string>());
+            _display.Received(1).ShowMessage("Phone fully charged");
         }
 
         [Test]
         public void ChargeChanged_CurrentUnderFiveShowMessage_WriteLog()
         {
             _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
-            _logfile.Received(1).WriteToLog(Arg.Any<string>(), Arg.Any<DateTime>());
+            _logfile.Received(1).WriteToLog("Phone fully charged", Arg.Any<DateTime>());
         }
 
         [Test]
         public void ChargeChanged_CurrentOverFiveHundredShowMessage_ShowMessage()
         {
             _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 502 });
-            _display.Received(1).ShowMessage(Arg.Any<string>());
+            _display.Received(1).ShowMessage("ERROR! Faulty Charger!");
         }
         [Test]
         public void ChargeChanged_CurrentOverFiveHundredShowMessage_WriteLog()
         {
             _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 502 });
-            _logfile.Received(1).WriteToLog(Arg.Any<string>(), Arg.Any<DateTime>());
+            _logfile.Received(1).WriteToLog("ERROR! Faulty Charger!", Arg.Any<DateTime>());
+        }
+
+        [Test]
+        public void ChargeChanged_JustCharing_ShowMessage()
+        {
+            _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 300 });
+            _display.Received(1).ShowMessage("Charging");
+        }
+        [Test]
+        public void ChargeChanged_JustCharing_WriteLog()
+        {
+            _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 300 });
+            _logfile.Received(1).WriteToLog("Charging", Arg.Any<DateTime>());
         }
     }
 }
