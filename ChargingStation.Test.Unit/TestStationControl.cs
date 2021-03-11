@@ -136,7 +136,6 @@ namespace ChargingStation.Test.Unit
         public void DoorClosed_ChargingStateAvailableUSBChargerConnected_DoorLocked()
         {
             // Arrange
-            _door.Closed = false;
             _uut.State = StationControl.ChargingStationState.Available;
             _usbccharge.Connected = true;
 
@@ -151,7 +150,6 @@ namespace ChargingStation.Test.Unit
         public void DoorClosed_ChargingStateAvailableUSBChargerConnected_WrittenToLog()
         {
             // Arrange
-            _door.Closed = false;
             _uut.State = StationControl.ChargingStationState.Available;
             _usbccharge.Connected = true;
 
@@ -162,36 +160,9 @@ namespace ChargingStation.Test.Unit
             _logfile.Received(1).WriteToLog(Arg.Any<string>(), Arg.Any<DateTime>());
         }
 
-        [Test]
-        public void DoorClosed_ChargingStateAvailableUSBChargerConnected_StateChangedToLocked()
-        {
-            // Arrange
-            _door.Closed = false;
-            _uut.State = StationControl.ChargingStationState.Available;
-            _usbccharge.Connected = true;
-
-            // Act
-            _door.CloseDoor();
-
-            // Assert
-            Assert.That(_uut, Is.EqualTo(StationControl.ChargingStationState.Locked));
-        }
 
 
-        [Test]
-        public void DoorClosed_ChargingStateLocked_StateChangedToAvailable()
-        {
-            // Arrange
-            _door.Closed = false;
-            _uut.State = StationControl.ChargingStationState.Locked;
-            _usbccharge.Connected = false;
 
-            // Act
-            _door.CloseDoor();
-
-            // Assert
-            Assert.That(_uut.State, Is.EqualTo(StationControl.ChargingStationState.Available));
-        }
 
         //Behavioral test
         [Test]
