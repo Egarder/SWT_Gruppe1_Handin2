@@ -33,12 +33,12 @@ namespace ChargingStation.Test.Unit
         }
 
 
-        //Event tests
+        //RFID Handler tests
 
 
-        //Functional tests
-        //[Test]
-        //public void DoorOpened_
+        //Door handler tests
+        [Test]
+        public void DoorOpened_
 
 
         //Behavioral test

@@ -30,6 +30,7 @@ namespace ChargingStationClassLib.Models
         {
             Available,
             Locked,
+            Opened
         };
 
         // Her mangler flere member variable
@@ -62,6 +63,7 @@ namespace ChargingStationClassLib.Models
                 {
                     message = "Rfid-kort scannet og godkendt - Skab låses op";
                     _door.UnlockDoor();
+                    _state = ChargingStationState.Available;
                 }
                 else
                     message = "Rfid-kort scannet - Skab allerede i brug";
@@ -92,8 +94,16 @@ namespace ChargingStationClassLib.Models
                 message = "Please connect phone";
             }
 
+            else if (!e.HasOpened && _state == ChargingStationState.Locked)
+            {
+                _state = ChargingStationState.Available;
+            }
+
             else
+            {
+                _state = ChargingStationState.Opened;
                 message = "Please close door";
+            }
 
             _display.ShowMessage(message);
             _log.WriteToLog(message);
