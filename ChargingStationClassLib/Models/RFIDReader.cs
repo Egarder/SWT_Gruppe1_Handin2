@@ -14,37 +14,45 @@ namespace ChargingStationClassLib.Models
     public class RFIDReader: IRFIDReader
     {
         public event EventHandler<ScanEventArgs> ScanEvent;
-        
+
+        private bool error;
+
+        public bool Error
+        {
+            get { return error; }
+            set { error = value; }
+        }
+
         private int cardID;
         public int CardID
         {
             get { return cardID; }
             set
             {
-                try
+
+                if (cardID >= 0)
                 {
-                    if (cardID >= 0)
+                    if (value != cardID)
                     {
-                        if (value != cardID)
-                        {
-                            OnScanEvent(new ScanEventArgs { ID = value }); //Notifies when cardID is set
-                            cardID = value;
-                        }
+                        Error = false;
+                        OnScanEvent(new ScanEventArgs { ID = value }); //Notifies when cardID is set
+                        cardID = value;
                     }
                 }
-                catch (ArgumentOutOfRangeException e)
-                {
-                    Console.WriteLine(e+" Invalid card ID, has to be positive");
-                    throw;
-                }
-                
-                
+                else
+                    Error = idError();
             } 
         }
 
         protected virtual void OnScanEvent(ScanEventArgs e)
         {
             ScanEvent?.Invoke(this,e);
+        }
+
+        public bool idError()
+        {
+            Console.WriteLine(" Invalid card ID, has to be positive");
+            return true;
         }
     }
 }
