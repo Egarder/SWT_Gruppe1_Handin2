@@ -29,8 +29,7 @@ namespace ChargingStationClassLib.Models
             get { return cardID; }
             set
             {
-
-                if (cardID >= 0)
+                if (value >= 0)
                 {
                     if (value != cardID)
                     {
