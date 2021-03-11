@@ -32,14 +32,6 @@ namespace ChargingStationClassLib.Models
                 Console.WriteLine("Door opened");
                 OnDoorMoveEvent(new DoorMoveEventArgs { HasClosed = false });
             }
-
-            #if DEBUG
-            else if (Locked)
-                Console.WriteLine("Cant open door - Door locked");
-
-            else
-                Console.WriteLine("Door already open");
-            #endif
         }
 
         public void CloseDoor()
@@ -50,10 +42,6 @@ namespace ChargingStationClassLib.Models
                 Console.WriteLine("Door closed");
                 OnDoorMoveEvent(new DoorMoveEventArgs { HasClosed = true });
             }
-
-            #if DEBUG
-            else Console.WriteLine("Door already closed");
-            #endif
         }
 
         public void LockDoor()
@@ -63,13 +51,6 @@ namespace ChargingStationClassLib.Models
                 Locked = true;
                 Console.WriteLine("Door Locked");
             }
-
-            #if DEBUG
-            else if (!Locked && !Closed)
-                Console.WriteLine("Cant lock door - door not closed");
-
-            else Console.WriteLine("Door already locked");
-            #endif
         }
 
         public void UnlockDoor()
@@ -79,12 +60,6 @@ namespace ChargingStationClassLib.Models
                 Locked = false;
                 Console.WriteLine("Door unlocked");
             }
-
-            #if DEBUG
-            else
-                Console.WriteLine("Door already unlocked");
-            #endif
-
         }
 
         protected virtual void OnDoorMoveEvent(DoorMoveEventArgs e)
