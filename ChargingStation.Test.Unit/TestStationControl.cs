@@ -29,7 +29,7 @@ namespace ChargingStation.Test.Unit
             _usbccharge = Substitute.For<IUsbCharger>();
             _chargecontrol = new ChargeControl(_usbccharge);
 
-            _uut = new StationControl(_door, _logfile, _rfid, _chargecontrol, _usbccharge);
+            _uut = new StationControl(_door, _logfile, _rfid, _chargecontrol, _usbccharge); //Injects including fakes
         }
 
 
@@ -38,7 +38,7 @@ namespace ChargingStation.Test.Unit
         [TestCase(1234)]
         public void RFIDEventhandler_stateAvailable_oldIdIsSet(int id)
         {
-            _uut.
+            _rfid.CardID = id;
 
             //Act:
             _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs {ID = id});
