@@ -9,6 +9,13 @@ namespace ChargingStationClassLib.Models
 {
     public class StationControl
     {
+        public StationControl(IDoor door, IUsbCharger charger)
+        {
+            _door = door;
+            _charger = charger;
+        }
+
+
         // Enum med tilstande ("states") svarende til tilstandsdiagrammet for klassen
         private enum ChargingStationState
         {
@@ -81,6 +88,15 @@ namespace ChargingStationClassLib.Models
             }
         }
 
-        // Her mangler de andre trigger handlere
+        private void DoorMovementDetectedet(Object o, DoorMoveEventArgs e)
+        {
+            if (e.HasOpened)
+                Console.WriteLine("Door opened");
+
+            else if (!e.HasOpened)
+                Console.WriteLine("Door closed");
+        }
+
+        private void 
     }
 }
