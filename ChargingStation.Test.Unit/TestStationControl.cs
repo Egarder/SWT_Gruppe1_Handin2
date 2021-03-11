@@ -88,7 +88,7 @@ namespace ChargingStation.Test.Unit
             _door.CloseDoor();
 
             // Assert
-            _logfile.Received(1).WriteToLog(Arg.Any<string>(),DateTime.Now);
+            _logfile.Received(1).WriteToLog(Arg.Any<string>());
         }
 
         //if (!e.HasOpened && _state == ChargingStationState.Available && _usbCharger.Connected)
@@ -109,22 +109,25 @@ namespace ChargingStation.Test.Unit
         [Test]
         public void ChargeChanged_CurrentUnderFiveShowMessage_WriteLog()
         {
-            _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
-            _logfile.Received(1).WriteToLog("",DateTime.Now);
+            var _usb = Substitute.For<IUsbCharger>();
+            var _log = Substitute.For<ILogFile>();
+            _usb.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
+            _log.Received(1).WriteToLog(Arg.Any<string>());
         }
 
         [Test]
         public void ChargeChanged_CurrentOverFiveHundredShowMessage_ShowMessage()
         {
-            _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 502 });
-            _display.Received(1).ShowMessage("");
+            var _usb = Substitute.For<IUsbCharger>();
+            var _disp = Substitute.For<IDisplay>();
+            _usb.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 502 });
+            _disp.Received(1).ShowMessage(Arg.Any<string>());
         }
         [Test]
         public void ChargeChanged_CurrentOverFiveHundredShowMessage_WriteLog()
         {
             _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 502 });
-            _logfile.Received(1).WriteToLog("",DateTime.Now);
+            _logfile.Received(1).WriteToLog("");
         }
-
     }
 }
