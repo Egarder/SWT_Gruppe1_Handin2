@@ -9,7 +9,7 @@ namespace ChargingStationClassLib.Models
 {
     public class StationControl
     {
-        public StationControl(IDoor door, IUsbCharger charger)
+        public StationControl(IDoor door, IUsbCharger charger, ILogFile log)
         {
             _door = door;
             _charger = charger;
@@ -28,9 +28,12 @@ namespace ChargingStationClassLib.Models
         // Her mangler flere member variable
         private ChargingStationState _state;
         private IUsbCharger _charger;
+        private ILogFile _log;
         private IDoor _door;
+        private IDisplay _display;
         private int _oldId;
         private int _id;
+        
 
         private string logFile = "logfile.txt"; // Navnet på systemets log-fil
 
@@ -50,7 +53,7 @@ namespace ChargingStationClassLib.Models
                         _oldId = id;
                         using (var writer = File.AppendText(logFile))
                         {
-                            writer.WriteLine(DateTime.Now + ": Skab låst med RFID: {0}", id);
+                             _display.ShowMessage(DateTime.Now + ": Skab låst med RFID: {id}");
                         }
 
                         Console.WriteLine("Skabet er låst og din telefon lades. Brug dit RFID tag til at låse op.");
@@ -58,7 +61,7 @@ namespace ChargingStationClassLib.Models
                     }
                     else
                     {
-                        Console.WriteLine("Din telefon er ikke ordentlig tilsluttet. Prøv igen.");
+                        _display.ShowMessage("Din telefon er ikke ordentlig tilsluttet. Prøv igen.");
                     }
 
                     break;
@@ -89,6 +92,26 @@ namespace ChargingStationClassLib.Models
                     break;
             }
         }
+
+        private void DoorMovementStateChanged(Object o, DoorMoveEventArgs e)
+        {
+            if (e.HasOpened)
+                _display.ShowMessage("Door opened");
+
+            else if (!e.HasOpened)
+                _display.ShowMessage("Door closed");
+        }
+
+        private void DoorLockStateChanged(Object o, DoorLockEventArgs e)
+        {
+            if (e.IsLocked)
+                _display.ShowMessage("Door Locked");
+
+            else if (!e.IsLocked)
+                _display.ShowMessage("Door Unlocked");
+        }
+
+
 
 
     }
