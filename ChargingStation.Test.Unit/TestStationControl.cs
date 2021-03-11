@@ -129,7 +129,15 @@ namespace ChargingStation.Test.Unit
             _logfile.WriteToLog(Arg.Any<string>(), Arg.Any<DateTime>());
         }
 
-        //===================================  **HER MANGLER AT BLIVE TESTET DET SIDSTE ELSE STATEMENT I rfidHANDLEREN****=======================================
+        [TestCase(50)]
+        public void RFIDEventhandler_StateOpened_ShowMessageCalled(int id)
+        {
+            _uut.State = StationControl.ChargingStationState.Opened;
+
+            _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
+
+            _display.ShowMessage("Please close the door");
+        }
 
         //Door handler tests
 
