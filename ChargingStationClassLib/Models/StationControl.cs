@@ -16,7 +16,6 @@ namespace ChargingStationClassLib.Models
             _log = log;
         }
 
-
         // Enum med tilstande ("states") svarende til tilstandsdiagrammet for klassen
         private enum ChargingStationState
         {
@@ -34,7 +33,6 @@ namespace ChargingStationClassLib.Models
         private int _oldId;
         private int _id;
         
-
         private string logFile = "logfile.txt"; // Navnet på systemets log-fil
 
         // Her mangler constructor
@@ -110,9 +108,5 @@ namespace ChargingStationClassLib.Models
             else if (!e.IsLocked)
                 _display.ShowMessage("Door Unlocked");
         }
-
-
-
-
     }
 }
