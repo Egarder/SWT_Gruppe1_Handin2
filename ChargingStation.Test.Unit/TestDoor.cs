@@ -44,7 +44,7 @@ namespace ChargingStation.Test.Unit
             _door.OpenDoor();
             
             // Assert
-            Assert.That(_doorMoveEventArgs.HasClosed, Is.EqualTo(true));
+            Assert.That(_doorMoveEventArgs.HasClosed, Is.EqualTo(false));
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace ChargingStation.Test.Unit
             _door.CloseDoor();
             
             // Assert
-            Assert.That(_doorMoveEventArgs.HasClosed, Is.EqualTo(false));
+            Assert.That(_doorMoveEventArgs.HasClosed, Is.EqualTo(true));
         }
     }
 }
