@@ -45,7 +45,7 @@ namespace ChargingStation.Test.Unit
         [Test]
         public void RFIDEventhandler_stateAvailable_unlockDoorIsCalled()
         {
-
+            _rfid.CardID = 50;
         }
 
         [Test]
