@@ -34,7 +34,11 @@ namespace ChargingStation.Test.Unit
 
 
         //RFID Handler tests
+        [Test]
+        public void RFIDEventhandler_stateAvailable()
+        {
 
+        }
 
         //Door handler tests
         [Test]
