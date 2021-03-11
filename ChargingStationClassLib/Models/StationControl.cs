@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,8 @@ namespace ChargingStationClassLib.Models
             _door.DoorMoveEvent += DoorClosedHandleEvent;
 
             _state = ChargingStationState.Available;
-
+            _usbCharger.Connected = false;
+            _oldId = -1;
         }
 
         // Enum med tilstande ("states") svarende til tilstandsdiagrammet for klassen
@@ -34,15 +36,18 @@ namespace ChargingStationClassLib.Models
             Opened
         };
 
-        // Her mangler flere member variable
+        #region fields
         private ILogFile _log;
         private IDoor _door;
         private IDisplay _display;
         private IUsbCharger _usbCharger;
         private IRFIDReader _rfid;
         private IChargeControl _chargeControl;
-        private int _oldId;
+
         private ChargingStationState _state;
+        private int _oldId;
+        #endregion fields
+
         public DateTime TimeStamp { get; set; }
         public ChargingStationState State { get => _state; set => _state = value; }
 
@@ -60,21 +65,22 @@ namespace ChargingStationClassLib.Models
         {
             if (_state == ChargingStationState.Available)
             {
+                message = $"ID: {e.ID} scanned. Please Open Door";
                 _oldId = e.ID;
                 _door.UnlockDoor();
-                _display.ShowMessage($"ID: {e.ID} scannet. Dør låst op");
+                _display.ShowMessage(message);
             }
 
             else if (_state == ChargingStationState.Locked)
             {
                 if (_oldId == e.ID)
                 {
-                    message = "Rfid-kort scannet og godkendt - Skab låses op";
+                    message = "ID Scanned and approved";
                     _door.UnlockDoor();
                     _state = ChargingStationState.Available;
                 }
                 else
-                    message = "Rfid-kort scannet - Skab allerede i brug";
+                    message = "ID scanned - Closet already in use";
 
                 _display.ShowMessage(message);
                 _log.WriteToLog(message,TimeStamp);
@@ -89,28 +95,46 @@ namespace ChargingStationClassLib.Models
 
         private void DoorClosedHandleEvent(object o, DoorMoveEventArgs door)
         {
-            if (door.HasClosed && _state == ChargingStationState.Available && _usbCharger.Connected)
+            if (_oldId < 0)
             {
-                _door.LockDoor();
-                _chargeControl.StartCharge();
-                message = "Door locked";
-                _state = ChargingStationState.Locked;
-            }
-
-            else if (door.HasClosed && _state == ChargingStationState.Available && !_usbCharger.Connected)
-            {
-                message = "Please connect phone";
-            }
-
-            else if (door.HasClosed && _state == ChargingStationState.Locked)
-            {
-                _state = ChargingStationState.Available;
+                message = "Please scan card";
             }
 
             else
             {
-                _state = ChargingStationState.Opened;
-                message = "Please close door";
+                switch (door.HasClosed)
+                {
+                    case true:
+
+                        if (_state == ChargingStationState.Opened)
+                        {
+                            if (_usbCharger.Connected)
+                            {
+                                _door.LockDoor();
+                                _chargeControl.StartCharge();
+                                _state = ChargingStationState.Locked;
+                                message = "Charging started";
+                            }
+
+                            else
+                            {
+                                message = "Please connect phone";
+                            }
+                        }
+
+                        else if (_state == ChargingStationState.Locked)
+                        {
+                            _state = ChargingStationState.Available;
+                        }
+
+                        break;
+
+
+                    case false:
+                        _state = ChargingStationState.Opened;
+                        message = "Door Opened. Please Connect Phone";
+                        break;
+                }
             }
 
             _display.ShowMessage(message);
