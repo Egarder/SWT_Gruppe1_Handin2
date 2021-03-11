@@ -47,9 +47,6 @@ namespace ChargingStation.Test.Unit
         [TestCase(1234)]
         public void RFIDEventhandler_stateAvailable_oldIdIsSet(int id)
         {
-            _uut.OldId = 0;
-            _rfid.CardID = id;
-
             //Act:
             _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs {ID = id});
 
