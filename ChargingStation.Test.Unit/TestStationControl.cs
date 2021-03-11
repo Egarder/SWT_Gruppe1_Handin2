@@ -218,17 +218,7 @@ namespace ChargingStation.Test.Unit
         }
 
         [Test]
-        public void CloseDoor_InLockedState_StateChangedToAvailable()
-        {
-            // Act
-            _door.DoorMoveEvent += Raise.EventWith(this, new DoorMoveEventArgs() { HasClosed = true });
-
-            // Assert
-            Assert.That(_uut.State, Is.EqualTo(StationControl.ChargingStationState.Available));
-        }
-
-        [Test]
-        public void CloseDoor_InAvailableState_StateChangedToOpened()
+        public void OpenDoor_InAvailableState_StateChangedToOpened()
         {
             // Arrange
             _uut.OldId = 1234;
@@ -239,10 +229,23 @@ namespace ChargingStation.Test.Unit
             // Assert
             Assert.That(_uut.State, Is.EqualTo(StationControl.ChargingStationState.Opened));
         }
-        
 
-        //Behavioral test
         [Test]
+        public void CloseDoor_InLockedState_StateChangedToAvailable()
+        {
+            // Arrange
+            _uut.OldId = 1234;
+            _uut.State = StationControl.ChargingStationState.Locked;
+
+            // Act
+            _door.DoorMoveEvent += Raise.EventWith(this, new DoorMoveEventArgs() { HasClosed = true });
+
+            // Assert
+            Assert.That(_uut.State, Is.EqualTo(StationControl.ChargingStationState.Available));
+        }
+
+        //Carge handler tests
+    [Test]
         public void ChargeChanged_CurrentUnderFiveShowMessage_ShowMessage()
         {
             _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
@@ -280,6 +283,19 @@ namespace ChargingStation.Test.Unit
         {
             _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 300 });
             _logfile.Received(1).WriteToLog("Charging", Arg.Any<DateTime>());
+        }
+
+
+        // Misc tests
+
+        [Test]
+        public void SetTimeStamp_TimeStampHasCorrectValue()
+        {
+            // Act
+            _uut.TimeStamp = DateTime.Today;
+
+            // Assert
+            Assert.That(_uut.TimeStamp, Is.EqualTo(DateTime.Today));
         }
     }
 }
