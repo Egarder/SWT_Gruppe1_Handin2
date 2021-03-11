@@ -13,7 +13,7 @@ namespace ChargingStationConsoleApp
 
             IDoor door = new Door();
             IRFIDReader rfidReader = new RFIDReader();
-            ILogFile logFile = new LogFile(filename);
+            ILog logFile = new LogFile(filename);
             IUsbCharger usbCharger = new UsbCharger();
             IChargeControl chargeControl = new ChargeControl(usbCharger);
 

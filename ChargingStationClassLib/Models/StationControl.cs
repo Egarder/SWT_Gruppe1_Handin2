@@ -9,7 +9,7 @@ namespace ChargingStationClassLib.Models
 {
     public class StationControl
     {
-        public StationControl(IDoor door, ILogFile log, IRFIDReader rfid, IChargeControl chargeControl, IUsbCharger usbCharger)
+        public StationControl(IDoor door, ILog log, IRFIDReader rfid, IChargeControl chargeControl, IUsbCharger usbCharger)
         {
             _door = door;
             _log = log;
@@ -33,7 +33,7 @@ namespace ChargingStationClassLib.Models
         };
 
         // Her mangler flere member variable
-        private ILogFile _log;
+        private ILog _log;
         private IDoor _door;
         private IDisplay _display;
         private IUsbCharger _usbCharger;

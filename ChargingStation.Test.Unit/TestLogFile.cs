@@ -2,62 +2,45 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using ChargingStationClassLib.Models;
 using NSubstitute;
 using NUnit.Framework;
 
+
 namespace ChargingStation.Test.Unit
 {
     class TestLogFile
     {
         private LogFile _uut;
-        private StreamReader _reader;
-        private string _fileName;
-        private StringBuilder _sb;
-        private string _line;
+        private DateTime _dateTime;
+        private DateTime _dateTime2;
+
         [SetUp]
         public void Setup()
         {
-            _uut = new LogFile(_fileName);
-            _reader = new StreamReader(_fileName);
-
+            _uut = new LogFile();
+            _dateTime = new DateTime(2010, 8, 18);
+            _dateTime = new DateTime(2010, 8, 18);
         }
 
         [TestCase("Denne linje er flot")]
-        [TestCase("Denne linje er lang")]
-        public void WriteToFile_1TimeDifferentStrings_FileExists(string text)
+        public void WriteToLog_1Item_ListContains1Item(string text)
         {
-            _uut.WriteToLog(text);
-            Assert.That(File.Exists(_fileName), Is.EqualTo(true));
-        }
-
-        [TestCase("Denne linje er flot")]
-        [TestCase("Denne linje er lang")]
-        public void WriteToFile_1TimeDifferentStrings_CorrectTextWrittenToFile(string text)
-        {
-            _uut.WriteToLog(text);
-            Assert.That(_reader.ReadLine(),Is.EqualTo(text));
+            _uut.WriteToLog(text, _dateTime);
+            Assert.That(_uut.LogList.Count, Is.EqualTo(1));
         }
 
         [TestCase("Denne linje er flot", "Denne linje er lang")]
-        [TestCase("Denne linje er lang", "Denne linje er lang")]
-        public void WriteToFile_MultipleTimesDifferentStrings_CorrectTextWrittenToFile(string text1,string text2)
+        public void WriteToLog_2Items_ListContains2Items(string text1, string text2)
         {
-            //act on file
-            _uut.WriteToLog(text1);
-            _uut.WriteToLog(text2);
-
-            //read on file
-            string str = _reader.ReadToEnd();
-
-            Assert.Multiple(() =>
-            {
-                Assert.That(str, Contains.Substring(text1));
-                Assert.That(str, Contains.Substring(text2));
-            });
+            _uut.WriteToLog(text1, _dateTime);
+            _uut.WriteToLog(text1, _dateTime);
+            Assert.That(_uut.LogList.Count, Is.EqualTo(2));
         }
-
     }
+
 }
+
