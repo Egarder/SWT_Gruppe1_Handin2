@@ -36,13 +36,6 @@ namespace ChargingStation.Test.Unit
 
 
         //RFID Handler tests
-
-        [TestCase(1234)]
-        public void RFIDEventhandler_stateAvailable_isSubscribed(int id)
-        {
-            
-        }
-
         [TestCase(50)]
         [TestCase(1234)]
         public void RFIDEventhandler_stateAvailable_oldIdIsSet(int id)
@@ -69,6 +62,74 @@ namespace ChargingStation.Test.Unit
 
             _display.Received(1).ShowMessage(Arg.Any<string>());
         }
+
+        [TestCase(50)]
+        public void RFIDEventhandler_stateLocked_CardIDMatch_UnlockDoorCalled(int id)
+        {
+            _uut.State = StationControl.ChargingStationState.Locked;
+            _uut.OldId = id;
+
+            _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
+
+            _door.Received(1).UnlockDoor();
+        }
+
+        [TestCase(50)]
+        public void RFIDEventhandler_stateLocked_CardIDMatch_StateChanged(int id)
+        {
+            _uut.State = StationControl.ChargingStationState.Locked;
+            _uut.OldId = id;
+
+            _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
+
+            Assert.That(_uut.State, Is.EqualTo(StationControl.ChargingStationState.Available));
+
+        }
+
+        [TestCase(50)]
+        public void RFIDEventhandler_stateLocked_CardIDMatch_DisplayCorrectMessage(int id)
+        {
+            _uut.State = StationControl.ChargingStationState.Locked;
+            _uut.OldId = id;
+
+            _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
+
+            _display.Received(1).ShowMessage("Rfid-kort scannet og godkendt - Skab låses op");
+        }
+
+        [TestCase(50)]
+        public void RFIDEventhandler_stateLocked_CardIDMatch_WriteToLogIsCalled(int id)
+        {
+            _uut.State = StationControl.ChargingStationState.Locked;
+            _uut.OldId = id;
+
+            _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
+
+            _logfile.WriteToLog(Arg.Any<string>(), Arg.Any<DateTime>());
+        }
+
+
+        [TestCase(50)]
+        public void RFIDEventhandler_stateLocked_CardIDNoMatch_DisplayCorrectMessage(int id)
+        {
+            _uut.State = StationControl.ChargingStationState.Locked;
+
+            _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
+
+            _display.Received(1).ShowMessage("Rfid-kort scannet - Skab allerede i brug");
+        }
+
+        [TestCase(50)]
+        public void RFIDEventhandler_stateLocked_CardIDNoMatch_WriteToLogIsCalled(int id)
+        {
+            _uut.State = StationControl.ChargingStationState.Locked;
+
+            _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
+
+            _logfile.WriteToLog(Arg.Any<string>(), Arg.Any<DateTime>());
+        }
+
+        //===================================  **HER MANGLER AT BLIVE TESTET DET SIDSTE ELSE STATEMENT I rfidHANDLEREN****=======================================
 
         //Door handler tests
         [Test]
