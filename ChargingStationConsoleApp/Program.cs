@@ -1,4 +1,5 @@
 ﻿using System;
+using ChargingStationClassLib.Models;
 
 namespace ChargingStationConsoleApp
 {
@@ -7,6 +8,10 @@ namespace ChargingStationConsoleApp
         static void Main(string[] args)
         {
             // Assemble your system here from all the classes
+
+            IDoor _door = new Door();
+            IRFIDReader _rfidReader = new RFIDReader();
+
 
             bool finish = false;
             do
@@ -23,19 +28,11 @@ namespace ChargingStationConsoleApp
                         break;
 
                     case 'O':
-                        door.OnDoorOpen();
+                        _door.OpenDoor();
                         break;
 
                     case 'C':
-                        door.OnDoorClose();
-                        break;
-
-                    case 'R':
-                        System.Console.WriteLine("Indtast RFID id: ");
-                        string idString = System.Console.ReadLine();
-
-                        int id = Convert.ToInt32(idString);
-                        rfidReader.OnRfidRead(id);
+                        _door.CloseDoor();
                         break;
 
                     default:
