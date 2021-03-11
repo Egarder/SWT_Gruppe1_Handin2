@@ -9,16 +9,23 @@ namespace ChargingStationClassLib.Models
 {
     public class StationControl
     {
-        public StationControl(IDoor door, IUsbCharger charger, ILogFile log)
+        public StationControl(IDoor door, IUsbCharger charger, ILogFile log, IRFIDReader rfid)
         {
+            
             _door = door;
             _charger = charger;
-            charger.ChargeEvent += ChargerHandleEvent;
             _log = log;
+            _rfid = rfid;
+
+            _charger.ChargeEvent += ChargerHandleEvent;
+            _rfid.ScanEvent += RFIDDetectedHandleEvent;
+
+            _state = ChargingStationState.Available;
+
         }
 
         // Enum med tilstande ("states") svarende til tilstandsdiagrammet for klassen
-        private enum ChargingStationState
+        public enum ChargingStationState
         {
             Available,
             Locked,
@@ -26,13 +33,15 @@ namespace ChargingStationClassLib.Models
         };
 
         // Her mangler flere member variable
-        private ChargingStationState _state;
         private IUsbCharger _charger;
         private ILogFile _log;
         private IDoor _door;
         private IDisplay _display;
+        private IRFIDReader _rfid;
         private int _oldId;
         private int _id;
+        private ChargingStationState _state;
+
         public double ChargeWatt { get; set; }
 
 
@@ -41,58 +50,23 @@ namespace ChargingStationClassLib.Models
         // Her mangler constructor
 
         // Eksempel på event handler for eventet "RFID Detected" fra tilstandsdiagrammet for klassen
-        private void RfidDetected(int id)
+
+        private void RFIDDetectedHandleEvent(Object o, ScanEventArgs e)
         {
-            switch (_state)
+            if (_state == ChargingStationState.Available)
             {
-                case ChargingStationState.Available:
-                    // Check for ladeforbindelse
-                    if (_charger.Connected)
-                    {
-                        _door.LockDoor();
-                        _charger.StartCharge();
-                        _oldId = id;
-                        using (var writer = File.AppendText(logFile))
-                        {
-                             _display.ShowMessage(DateTime.Now + ": Skab låst med RFID: {id}");
-                        }
+                _oldId = e.ID;
+                _door.UnlockDoor();
+                _display.ShowMessage("ID scannet. Dør låst op");
 
-                        Console.WriteLine("Skabet er låst og din telefon lades. Brug dit RFID tag til at låse op.");
-                        _state = ChargingStationState.Locked;
-                    }
-                    else
-                    {
-                        _display.ShowMessage("Din telefon er ikke ordentlig tilsluttet. Prøv igen.");
-                    }
+                _door.OpenDoor();
 
-                    break;
-
-                case ChargingStationState.DoorOpen:
-                    // Ignore
-                    break;
-
-                case ChargingStationState.Locked:
-                    // Check for correct ID
-                    if (id == _oldId)
-                    {
-                        _charger.StopCharge();
-                        _door.UnlockDoor();
-                        using (var writer = File.AppendText(logFile))
-                        {
-                            writer.WriteLine(DateTime.Now + ": Skab låst op med RFID: {0}", id);
-                        }
-
-                        Console.WriteLine("Tag din telefon ud af skabet og luk døren");
-                        _state = ChargingStationState.Available;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Forkert RFID tag");
-                    }
-
-                    break;
+                if ()
             }
+
+            else if (_state == ChargingStationState.Locked)
         }
+
 
         private void DoorMovementStateChanged(Object o, DoorMoveEventArgs e)
         {

@@ -16,7 +16,7 @@ namespace ChargingStationClassLib.Models
         public bool HasOpened { get; set; }
     }
 
-    class Door : IDoor
+    public class Door : IDoor
     {
         private bool Locked { get; set; }
         private bool Closed { get; set; }
