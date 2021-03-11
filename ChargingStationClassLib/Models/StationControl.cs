@@ -36,15 +36,18 @@ namespace ChargingStationClassLib.Models
             Opened
         };
 
-        // Her mangler flere member variable
+        #region fields
         private ILogFile _log;
         private IDoor _door;
         private IDisplay _display;
         private IUsbCharger _usbCharger;
         private IRFIDReader _rfid;
         private IChargeControl _chargeControl;
-        private int _oldId;
+
         private ChargingStationState _state;
+        private int _oldId;
+        #endregion fields
+
         public DateTime TimeStamp { get; set; }
         public ChargingStationState State { get => _state; set => _state = value; }
 
@@ -94,7 +97,7 @@ namespace ChargingStationClassLib.Models
         {
             if (_oldId < 0)
             {
-                message = "Please scan Card";
+                message = "Please scan card";
             }
 
             else
