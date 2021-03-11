@@ -9,6 +9,7 @@ using NUnit.Framework;
 
 namespace ChargingStation.Test.Unit
 {
+    [TestFixture]
     class TestStationController
     {
         private StationControl _uut;
@@ -20,26 +21,31 @@ namespace ChargingStation.Test.Unit
         private IChargeControl _chargecontrol;
 
         [SetUp]
-        public void setup()
+        public void Setup()
         {
-            _logfile = new LogFile();
-            _display = new Display();
+            _logfile = Substitute.For<ILogFile>();
             _door = Substitute.For<IDoor>();
             _rfid = Substitute.For<IRFIDReader>();
             _usbccharge = Substitute.For<IUsbCharger>();
+            _display = new Display();
             _chargecontrol = new ChargeControl(_usbccharge);
 
-            _uut = new StationControl(_door, _logfile, _rfid, _chargecontrol, _usbccharge);
+            _uut = new StationControl(_door, _logfile, _rfid, _chargecontrol, _usbccharge); //Injects including fakes
         }
 
 
         //RFID Handler tests
-        [Test]
-        public void RFIDEventhandler_stateAvailable_oldIdIsSet()
+        [TestCase(50)]
+        [TestCase(1234)]
+        public void RFIDEventhandler_stateAvailable_oldIdIsSet(int id)
         {
-            _rfid.CardID = 50;
+            _rfid.CardID = id;
 
-            Assert.That(_uut.OldId, Is.EqualTo(50));
+            //Act:
+            _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs {ID = id});
+
+           //Assert:
+            Assert.That(_uut.OldId, Is.EqualTo(id));
         }
 
         [Test]
@@ -56,13 +62,34 @@ namespace ChargingStation.Test.Unit
 
         //Door handler tests
         [Test]
-        public void DoorClosed_ChargingStateAvailableUSBChargerConnected()
+        public void DoorClosed_ChargingStateAvailableUSBChargerConnected_DoorLocked()
         {
-            
+            // Arrange
+            _door.Closed = false;
+            _uut.State = StationControl.ChargingStationState.Available;
+            _usbccharge.Connected = true;
 
+            // Act
             _door.CloseDoor();
+
+            // Assert
+            _door.Received(1).CloseDoor();
         }
 
+        [Test]
+        public void DoorClosed_ChargingStateAvailableUSBChargerConnected_WrittenToLog()
+        {
+            // Arrange
+            _door.Closed = false;
+            _uut.State = StationControl.ChargingStationState.Available;
+            _usbccharge.Connected = true;
+
+            // Act
+            _door.CloseDoor();
+
+            // Assert
+            _logfile.Received(1).WriteToLog(Arg.Any<string>());
+        }
 
         //if (!e.HasOpened && _state == ChargingStationState.Available && _usbCharger.Connected)
         //{
