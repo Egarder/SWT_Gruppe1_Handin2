@@ -29,6 +29,14 @@ namespace ChargingStation.Test.Unit
         }
 
         [Test]
+        public void CardIDPropertySetGetNegativeInt_ValueIsSet()
+        {
+            _uut.CardID = -50;
+
+            Assert.That(_uut.CardID, Is.EqualTo(-50));
+        }
+
+        [Test]
         public void SetCardID_ToNewID_CorrectIDReceived()
         {
             _uut.CardID = 50;
