@@ -24,9 +24,9 @@ namespace ChargingStation.Test.Unit
         {
             _logfile = new LogFile();
             _display = new Display();
-            _door = new Door();
-            _rfid = new RFIDReader();
-            _usbccharge = new UsbCharger();
+            _door = Substitute.For<IDoor>();
+            _rfid = Substitute.For<IRFIDReader>();
+            _usbccharge = Substitute.For<IUsbCharger>();
             _chargecontrol = new ChargeControl(_usbccharge);
 
             _uut = new StationControl(_door, _logfile, _rfid, _chargecontrol, _usbccharge);
