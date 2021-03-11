@@ -23,7 +23,8 @@ namespace ChargingStationClassLib.Models
             _door.DoorMoveEvent += DoorClosedHandleEvent;
 
             _state = ChargingStationState.Available;
-
+            _usbCharger.Connected = false;
+            _oldId = 0;
         }
 
         // Enum med tilstande ("states") svarende til tilstandsdiagrammet for klassen
@@ -60,21 +61,22 @@ namespace ChargingStationClassLib.Models
         {
             if (_state == ChargingStationState.Available)
             {
+                message = $"ID: {e.ID} scanned. Door Unlocked. Please Open Door";
                 _oldId = e.ID;
                 _door.UnlockDoor();
-                _display.ShowMessage($"ID: {e.ID} scannet. Dør låst op");
+                _display.ShowMessage(message);
             }
 
             else if (_state == ChargingStationState.Locked)
             {
                 if (_oldId == e.ID)
                 {
-                    message = "Rfid-kort scannet og godkendt - Skab låses op";
+                    message = "ID Scanned and approved - Door Unlocked";
                     _door.UnlockDoor();
                     _state = ChargingStationState.Available;
                 }
                 else
-                    message = "Rfid-kort scannet - Skab allerede i brug";
+                    message = "ID scanned - Closet already in use";
 
                 _display.ShowMessage(message);
                 _log.WriteToLog(message,TimeStamp);
@@ -107,10 +109,15 @@ namespace ChargingStationClassLib.Models
                 _state = ChargingStationState.Available;
             }
 
-            else
+            else if (_oldId != 0)
             {
                 _state = ChargingStationState.Opened;
-                message = "Please close door";
+                message = "Door Opened. Please Connect Phone";
+            }
+
+            else
+            {
+                message = "Door locked. Please scan Card";
             }
 
             _display.ShowMessage(message);

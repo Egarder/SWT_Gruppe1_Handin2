@@ -22,7 +22,7 @@ namespace ChargingStationConsoleApp
             do
             {
                 string input;
-                System.Console.WriteLine("Indtast E, O, C, R: ");
+                System.Console.WriteLine("Indtast (E)nd, (O)pen, (C)lose, (R)ead Card, Connect (P)hone: ");
                 input = Console.ReadLine();
                 if (string.IsNullOrEmpty(input)) continue;
 
@@ -44,6 +44,10 @@ namespace ChargingStationConsoleApp
                         rfidReader.CardID = 1234;
                         break;
 
+                    case 'P':
+                        usbCharger.Connected = true;
+                        Console.WriteLine("Phone connected");
+                        break;
                     default:
                         break;
                 }
