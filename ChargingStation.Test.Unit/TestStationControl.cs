@@ -34,37 +34,41 @@ namespace ChargingStation.Test.Unit
 
 
         //RFID Handler tests
+        [Test]
+        public void RFIDEventhandler_stateAvailable_oldIdIsSet()
+        {
+            _rfid.CardID = 50;
 
+            Assert.That(_uut.OldId, Is.EqualTo(50));
+        }
+
+        [Test]
+        public void RFIDEventhandler_stateAvailable_unlockDoorIsCalled()
+        {
+
+        }
+
+        [Test]
+        public void RFIDEventhandler_stateAvailable_ShowMessageIsCalled()
+        {
+
+        }
 
         //Door handler tests
-        //[Test]
-        //public void DoorOpened_
+        [Test]
+        public void DoorOpened_
 
+        if (!e.HasOpened && _state == ChargingStationState.Available && _usbCharger.Connected)
+        {
+            _door.LockDoor();
+            _chargeControl.StartCharge();
+            message = "Door locked";
+            _state = ChargingStationState.Locked;
+        }
 
         //Behavioral test
         [Test]
-        public void ChargeChanged_CurrentUnderFiveShowMessage_ShowMessage(string test)
-        {
-            test = "test";
-            _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
-            _display.Received(1).ShowMessage(test);
-        }
-        [Test]
-        public void ChargeChanged_CurrentUnderFiveShowMessage_WriteLog(string test)
-        {
-            _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
-            _logfile.WriteToLog(test);
-        }
-
-        [Test]
-        public void ChargeChanged_CurrentOverFiveHundredShowMessage_ShowMessage(string test)
-        {
-            test = "test";
-            _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
-            _display.Received(1).ShowMessage(test);
-        }
-        [Test]
-        public void ChargeChanged_CurrentOverFiveHundredShowMessage_WriteLog(string test)
+        public void ChargeChanged_CurrentUnderFiveShowMessage_ShowMessage()
         {
             _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
             _logfile.WriteToLog(test);

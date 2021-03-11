@@ -43,9 +43,15 @@ namespace ChargingStationClassLib.Models
         private int _oldId;
         private ChargingStationState _state;
 
+        public ChargingStationState State { get => _state; set => _state = value; }
+
 
         private string message = "";
         public double ChargeWatt { get; set; }
+        public int OldId
+        {
+            get { return _oldId; }
+        }
 
 
         private void RFIDDetectedHandleEvent(Object o, ScanEventArgs e)
