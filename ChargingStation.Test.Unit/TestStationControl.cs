@@ -91,6 +91,28 @@ namespace ChargingStation.Test.Unit
             _logfile.Received(1).WriteToLog(Arg.Any<string>());
         }
 
+        [Test]
+        public void DoorClosed_ChargingStateLocked_StateChangedToAvailable()
+        {
+            // Arrange
+            _door.Closed = false;
+            _usbccharge.Connected = false;
+            _uut.State = StationControl.ChargingStationState.Locked;
+
+            int expectedState = (int)StationControl.ChargingStationState.Available;
+
+            // Act
+            _door.CloseDoor();
+
+            // Assert
+            Assert.That((int)_uut.State, Is.EqualTo(expectedState));
+        }
+
+        //else if (!e.HasOpened && _state == ChargingStationState.Locked)
+        //{
+        //    _state = ChargingStationState.Available;
+        //}
+
         //if (!e.HasOpened && _state == ChargingStationState.Available && _usbCharger.Connected)
         //{
         //    _door.LockDoor();

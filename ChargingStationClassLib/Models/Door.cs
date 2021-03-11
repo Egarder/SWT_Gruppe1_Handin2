@@ -8,7 +8,7 @@ namespace ChargingStationClassLib.Models
 {
     public class DoorMoveEventArgs : EventArgs
     {
-        public bool HasOpened { get; set; }
+        public bool HasClosed { get; set; }
     }
 
     public class Door : IDoor
@@ -29,7 +29,7 @@ namespace ChargingStationClassLib.Models
             if (!Locked && Closed)
             {
                 Closed = false;
-                OnDoorMoveEvent(new DoorMoveEventArgs { HasOpened = true });
+                OnDoorMoveEvent(new DoorMoveEventArgs { HasClosed = true });
             }
         }
 
@@ -38,7 +38,7 @@ namespace ChargingStationClassLib.Models
             if (!Closed)
             {
                 Closed = true;
-                OnDoorMoveEvent(new DoorMoveEventArgs { HasOpened = false });
+                OnDoorMoveEvent(new DoorMoveEventArgs { HasClosed = false });
             }
         }
 
