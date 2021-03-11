@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ChargingStationClassLib.Models;
 using NSubstitute;
+using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
 
 namespace ChargingStation.Test.Unit
@@ -34,10 +35,18 @@ namespace ChargingStation.Test.Unit
 
 
         //RFID Handler tests
+
+        [TestCase(1234)]
+        public void RFIDEventhandler_stateAvailable_isSubscribed(int id)
+        {
+            
+        }
+
         [TestCase(50)]
         [TestCase(1234)]
         public void RFIDEventhandler_stateAvailable_oldIdIsSet(int id)
         {
+            _uut.OldId = 0;
             _rfid.CardID = id;
 
             //Act:
@@ -47,10 +56,13 @@ namespace ChargingStation.Test.Unit
             Assert.That(_uut.OldId, Is.EqualTo(id));
         }
 
-        [Test]
-        public void RFIDEventhandler_stateAvailable_unlockDoorIsCalled()
+        [TestCase(50)]
+        public void RFIDEventhandler_stateAvailable_unlockDoorIsCalled( int id)
         {
-            _rfid.CardID = 50;
+            //Act:
+            _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
+
+            _door.Received(1).UnlockDoor();
         }
 
         [Test]
