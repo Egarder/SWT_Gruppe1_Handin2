@@ -57,9 +57,8 @@ namespace ChargingStationClassLib.Models
             {
                 _oldId = e.ID;
                 _door.UnlockDoor();
-                _display.ShowMessage("ID scannet. Dør låst op");
+                _display.ShowMessage($"ID: {e.ID} scannet. Dør låst op");
             }
-
             else if (_state == ChargingStationState.Locked)
             {
                 string message = "";
@@ -75,8 +74,13 @@ namespace ChargingStationClassLib.Models
                 _display.ShowMessage(message);
                 _log.WriteToLog(message);
             }
+            else
+            {
+                string message = "Please close the door";
+                _display.ShowMessage(message);
+            }
 
-            //state = DooOpen -> writeout:"Please close door"  - ?
+
         }
 
         private void DoorClosedHandleEvent(object o, DoorMoveEventArgs e)

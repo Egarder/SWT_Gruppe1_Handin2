@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Enumeration;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
@@ -11,6 +12,9 @@ namespace ChargingStationClassLib.Models
 {
     public class LogFile : ILogFile
     {
+
+        public LogFile()
+        { }
         public LogFile(string fileName/*IRFIDReader reader, IDoor door*/)
         {
             FileName = fileName;
@@ -43,6 +47,6 @@ namespace ChargingStationClassLib.Models
             await file.WriteLineAsync(DateTime.Now + ": " + text);
         }
 
-        public string FileName { get; set; }
+        public string FileName { get; set; } = "LogFile.txt";
     }
 }

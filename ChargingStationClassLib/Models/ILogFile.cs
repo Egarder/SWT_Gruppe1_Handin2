@@ -9,8 +9,8 @@ namespace ChargingStationClassLib.Models
 {
     public interface ILogFile
     {
-        void WriteToLog(string logmessage);
+        void WriteToFile(string text);
 
-        string ReadFromLog();
+        public string FileName { get; set; }
     }
 }
