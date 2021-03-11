@@ -75,6 +75,8 @@ namespace ChargingStationClassLib.Models
                 _display.ShowMessage(message);
                 _log.WriteToLog(message);
             }
+
+            //state = DooOpen -> writeout:"Please close door"  - ?
         }
 
         private void DoorClosedHandleEvent(object o, DoorMoveEventArgs e)

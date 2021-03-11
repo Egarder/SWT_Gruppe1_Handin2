@@ -35,7 +35,7 @@ namespace ChargingStationClassLib.Models
             ChargeWatt = CEA.Current;
             if(ChargeWatt >0 && ChargeWatt<=5)
             {
-                StartCharge();
+                StopCharge();
             }
             else if(ChargeWatt > 500)
             {
