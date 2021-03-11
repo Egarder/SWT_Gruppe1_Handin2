@@ -9,8 +9,13 @@ namespace ChargingStationConsoleApp
         {
             // Assemble your system here from all the classes
 
+            string filename = "savefile";
+
             IDoor _door = new Door();
             IRFIDReader _rfidReader = new RFIDReader();
+            ILogFile logFile = new LogFile(filename);
+            IUsbCharger usbCharger = new UsbCharger();
+            IChargeControl chargeControl = new ChargeControl(usbCharger);
 
 
             bool finish = false;
@@ -24,7 +29,7 @@ namespace ChargingStationConsoleApp
                 switch (input[0])
                 {
                     case 'E':
-                        finish = true;
+                        
                         break;
 
                     case 'O':

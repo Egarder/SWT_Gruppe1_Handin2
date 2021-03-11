@@ -16,8 +16,9 @@ namespace ChargingStationClassLib.Models
             _rfid = rfid;
             _chargeControl = chargeControl;
 
-            _charger.ChargeEvent += ChargerHandleEvent;
+            _usbCharger.ChargeEvent += ChargerHandleEvent;
             _rfid.ScanEvent += RFIDDetectedHandleEvent;
+            _door.DoorMoveEvent += DoorClosedHandleEvent;
 
             _state = ChargingStationState.Available;
 
@@ -32,12 +33,12 @@ namespace ChargingStationClassLib.Models
         };
 
         // Her mangler flere member variable
-        private IUsbCharger _charger;
         private ILogFile _log;
         private IDoor _door;
         private IDisplay _display;
+        private IUsbCharger _usbCharger;
         private IRFIDReader _rfid;
-        private IUsbCharger _usbCharger; 
+        private IChargeControl _chargeControl;
         private int _oldId;
         private ChargingStationState _state;
 
@@ -84,8 +85,7 @@ namespace ChargingStationClassLib.Models
             {
                 message = "Door locked";
                 _door.LockDoor();
-               
-                _ch
+                _chargeControl.StartCharge();
             }
 
             else
@@ -93,7 +93,6 @@ namespace ChargingStationClassLib.Models
 
             _display.ShowMessage(message);
             _log.WriteToLog(message);
-
         }
 
 
