@@ -97,6 +97,7 @@ namespace ChargingStation.Test.Unit
             _display.Received(1).ShowMessage("ID Scanned and approved");
         }
 
+
         [TestCase(50)]
         public void RFIDEventhandler_stateLocked_CardIDMatch_WriteToLogIsCalled(int id)
         {
