@@ -97,6 +97,7 @@ namespace ChargingStation.Test.Unit
             _display.Received(1).ShowMessage("Rfid-kort scannet og godkendt - Skab låses op");
         }
 
+
         [TestCase(50)]
         public void RFIDEventhandler_stateLocked_CardIDMatch_WriteToLogIsCalled(int id)
         {
