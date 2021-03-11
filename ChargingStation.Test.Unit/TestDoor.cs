@@ -69,5 +69,60 @@ namespace ChargingStation.Test.Unit
             // Assert
             Assert.That(_doorMoveEventArgs.HasClosed, Is.EqualTo(true));
         }
+
+        [Test]
+        public void LockDoor_DoorOpen_DoorNotLocked()
+        {
+            // Arrange - Door has to be open before it can close
+            _door.Closed = false;
+
+            // Act
+            _door.LockDoor();
+
+            // Assert
+            Assert.That(_door.Locked, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void LockDoor_DoorClosedAndNotLocked_DoorLocked()
+        {
+            // Arrange - Door has to be open before it can close
+            _door.Closed = true;
+            _door.Locked = false;
+
+            // Act
+            _door.LockDoor();
+
+            // Assert
+            Assert.That(_door.Locked, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void UnLockDoor_DoorLockedAndDoorOpen_DoorNotUnlocked()
+        {
+            // Arrange - Door has to be open before it can close
+            _door.Closed = false;
+            _door.Locked = true;
+
+            // Act
+            _door.UnlockDoor();
+
+            // Assert
+            Assert.That(_door.Locked, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void UnLockDoor_DoorLockedAndClosed_DoorUnlocked()
+        {
+            // Arrange - Door has to be open before it can close
+            _door.Closed = true;
+            _door.Locked = true;
+
+            // Act
+            _door.UnlockDoor();
+
+            // Assert
+            Assert.That(_door.Locked, Is.EqualTo(false));
+        }
     }
 }
