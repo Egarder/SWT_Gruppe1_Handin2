@@ -11,12 +11,13 @@ namespace ChargingStationConsoleApp
 
             string filename = "savefile";
 
-            IDoor _door = new Door();
-            IRFIDReader _rfidReader = new RFIDReader();
+            IDoor door = new Door();
+            IRFIDReader rfidReader = new RFIDReader();
             ILogFile logFile = new LogFile(filename);
             IUsbCharger usbCharger = new UsbCharger();
             IChargeControl chargeControl = new ChargeControl(usbCharger);
 
+            StationControl stationController = new StationControl(door, logFile, rfidReader, chargeControl, usbCharger);
 
             bool finish = false;
             do
@@ -29,15 +30,19 @@ namespace ChargingStationConsoleApp
                 switch (input[0])
                 {
                     case 'E':
-                        
+                        System.Environment.Exit(1);
                         break;
 
                     case 'O':
-                        _door.OpenDoor();
+                        door.OpenDoor();
                         break;
 
                     case 'C':
-                        _door.CloseDoor();
+                        door.CloseDoor();
+                        break;
+
+                    case 'R':
+                        rfidReader.CardID = 1234;
                         break;
 
                     default:
