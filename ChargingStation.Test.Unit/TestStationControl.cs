@@ -37,15 +37,37 @@ namespace ChargingStation.Test.Unit
 
 
         //Door handler tests
-        [Test]
-        public void DoorOpened_
+        //[Test]
+        //public void DoorOpened_
 
 
         //Behavioral test
         [Test]
-        public void ChargeChanged_CurrentUnderFiveShowMessage_ShowMessage()
+        public void ChargeChanged_CurrentUnderFiveShowMessage_ShowMessage(string test)
         {
-            _
+            test = "test";
+            _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
+            _display.Received(1).ShowMessage(test);
+        }
+        [Test]
+        public void ChargeChanged_CurrentUnderFiveShowMessage_WriteLog(string test)
+        {
+            _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
+            _logfile.WriteToLog(test);
+        }
+
+        [Test]
+        public void ChargeChanged_CurrentOverFiveHundredShowMessage_ShowMessage(string test)
+        {
+            test = "test";
+            _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
+            _display.Received(1).ShowMessage(test);
+        }
+        [Test]
+        public void ChargeChanged_CurrentOverFiveHundredShowMessage_WriteLog(string test)
+        {
+            _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
+            _logfile.WriteToLog(test);
         }
 
     }
