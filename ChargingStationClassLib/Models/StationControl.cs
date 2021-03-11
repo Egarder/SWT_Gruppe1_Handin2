@@ -13,6 +13,7 @@ namespace ChargingStationClassLib.Models
         {
             _door = door;
             _charger = charger;
+            charger.ChargeEvent += ChargerHandleEvent;
             _log = log;
         }
 
@@ -32,7 +33,9 @@ namespace ChargingStationClassLib.Models
         private IDisplay _display;
         private int _oldId;
         private int _id;
-        
+        public double ChargeWatt { get; set; }
+
+
         private string logFile = "logfile.txt"; // Navnet på systemets log-fil
 
         // Her mangler constructor
@@ -108,5 +111,24 @@ namespace ChargingStationClassLib.Models
             else if (!e.IsLocked)
                 _display.ShowMessage("Door Unlocked");
         }
+
+        private void ChargerHandleEvent(object sender, ChargerEventArgs CEA)
+        {
+            ChargeWatt = CEA.Current;
+            if (ChargeWatt > 0 && ChargeWatt <= 5)
+            {
+                _display.ShowMessage("Phone fully charged");
+            }
+            else if (ChargeWatt > 500)
+            {
+                _display.ShowMessage("ERROR! Faulty Charger!");
+            }
+            else
+            {
+                _display.ShowMessage("Charing");
+            }
+        }
+
+
     }
 }
