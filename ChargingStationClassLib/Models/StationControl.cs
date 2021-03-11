@@ -17,7 +17,6 @@ namespace ChargingStationClassLib.Models
             _log = log;
         }
 
-
         // Enum med tilstande ("states") svarende til tilstandsdiagrammet for klassen
         private enum ChargingStationState
         {
