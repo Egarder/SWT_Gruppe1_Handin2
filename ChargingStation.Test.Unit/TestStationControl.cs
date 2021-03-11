@@ -39,7 +39,7 @@ namespace ChargingStation.Test.Unit
         {
             _rfid.CardID = 50;
 
-            Assert.That(_uut.);
+            Assert.That(_uut.OldId, Is.EqualTo(50));
         }
 
         [Test]
