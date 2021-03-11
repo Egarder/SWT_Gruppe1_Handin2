@@ -22,7 +22,7 @@ namespace ChargingStation.Test.Unit
         [SetUp]
         public void setup()
         {
-            _uut = new StationControl();
+            _uut = new StationControl( );
         }
 
 
