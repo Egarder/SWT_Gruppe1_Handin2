@@ -58,13 +58,13 @@ namespace ChargingStationClassLib.Models
                 _oldId = e.ID;
                 _door.UnlockDoor();
                 _display.ShowMessage("ID scannet. Dør låst op");
-
-                _door.OpenDoor();
-
-                if ()
             }
 
             else if (_state == ChargingStationState.Locked)
+            {
+                if (_oldId == e.ID)
+                    _display.ShowMessage("");
+            }
         }
 
 
