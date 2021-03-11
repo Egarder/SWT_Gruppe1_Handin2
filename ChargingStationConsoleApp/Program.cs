@@ -9,11 +9,9 @@ namespace ChargingStationConsoleApp
         {
             // Assemble your system here from all the classes
 
-            string filename = "savefile";
-
             IDoor door = new Door();
             IRFIDReader rfidReader = new RFIDReader();
-            ILog logFile = new LogFile(filename);
+            ILogFile logFile = new LogFile();
             IUsbCharger usbCharger = new UsbCharger();
             IChargeControl chargeControl = new ChargeControl(usbCharger);
 

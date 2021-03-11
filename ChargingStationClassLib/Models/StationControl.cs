@@ -9,7 +9,7 @@ namespace ChargingStationClassLib.Models
 {
     public class StationControl
     {
-        public StationControl(IDoor door, ILog log, IRFIDReader rfid, IChargeControl chargeControl, IUsbCharger usbCharger)
+        public StationControl(IDoor door, ILogFile log, IRFIDReader rfid, IChargeControl chargeControl, IUsbCharger usbCharger)
         {
             _door = door;
             _log = log;
@@ -34,7 +34,7 @@ namespace ChargingStationClassLib.Models
         };
 
         // Her mangler flere member variable
-        private ILog _log;
+        private ILogFile _log;
         private IDoor _door;
         private IDisplay _display;
         private IUsbCharger _usbCharger;
@@ -42,7 +42,7 @@ namespace ChargingStationClassLib.Models
         private IChargeControl _chargeControl;
         private int _oldId;
         private ChargingStationState _state;
-
+        public DateTime TimeStamp { get; set; }
         public ChargingStationState State { get => _state; set => _state = value; }
 
 
@@ -76,7 +76,7 @@ namespace ChargingStationClassLib.Models
                     message = "Rfid-kort scannet - Skab allerede i brug";
 
                 _display.ShowMessage(message);
-                _log.WriteToLog(message);
+                _log.WriteToLog(message,TimeStamp);
             }
 
             else
@@ -113,7 +113,7 @@ namespace ChargingStationClassLib.Models
             }
 
             _display.ShowMessage(message);
-            _log.WriteToLog(message);
+            _log.WriteToLog(message, TimeStamp);
         }
 
 
@@ -131,7 +131,7 @@ namespace ChargingStationClassLib.Models
                 message = "Charging";
 
             _display.ShowMessage(message);
-            _log.WriteToLog(message);
+            _log.WriteToLog(message, TimeStamp);
         }
 
 
