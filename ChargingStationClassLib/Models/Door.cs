@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 namespace ChargingStationClassLib.Models
 {
-    public class DoorLockEventArgs : EventArgs
-    {
-        public bool IsLocked { get; set; }
-    }
-
     public class DoorMoveEventArgs : EventArgs
     {
         public bool HasOpened { get; set; }
@@ -18,11 +13,9 @@ namespace ChargingStationClassLib.Models
 
     public class Door : IDoor
     {
-        private bool Locked { get; set; }
-        private bool Closed { get; set; }
+        public bool Locked { get; set; }
+        public bool Closed { get; set; }
 
-
-        public event EventHandler<DoorLockEventArgs> DoorLockEvent;
         public event EventHandler<DoorMoveEventArgs> DoorMoveEvent;
 
         public Door()
@@ -54,7 +47,6 @@ namespace ChargingStationClassLib.Models
             if (!Locked && Closed)
             {
                 Locked = true;
-                OnDoorLockEvent(new DoorLockEventArgs { IsLocked = true });
             }
         }
 
@@ -63,18 +55,12 @@ namespace ChargingStationClassLib.Models
             if (Locked && Closed)
             {
                 Locked = false;
-                OnDoorLockEvent(new DoorLockEventArgs { IsLocked = false });
             }
         }
 
         protected virtual void OnDoorMoveEvent(DoorMoveEventArgs e)
         {
             DoorMoveEvent?.Invoke(this, e);
-        }
-
-        protected virtual void OnDoorLockEvent(DoorLockEventArgs e)
-        {
-            DoorLockEvent?.Invoke(this, e);
         }
 
     }

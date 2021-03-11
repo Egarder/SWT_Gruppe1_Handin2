@@ -14,6 +14,7 @@ namespace ChargingStationClassLib.Models
             _door = door;
             _log = log;
             _rfid = rfid;
+            _usbCharger = usbCharger;
             _chargeControl = chargeControl;
 
             _usbCharger.ChargeEvent += ChargerHandleEvent;
@@ -29,7 +30,7 @@ namespace ChargingStationClassLib.Models
         {
             Available,
             Locked,
-            DoorOpen
+            Opened
         };
 
         // Her mangler flere member variable
@@ -42,14 +43,17 @@ namespace ChargingStationClassLib.Models
         private int _oldId;
         private ChargingStationState _state;
 
+        public ChargingStationState State { get => _state; set => _state = value; }
+
+
+        private string message = "";
         public double ChargeWatt { get; set; }
+        public int OldId
+        {
+            get { return _oldId; }
+            set { _oldId = value; }
+        }
 
-
-        private string logFile = "logfile.txt"; // Navnet på systemets log-fil
-
-        // Her mangler constructor
-
-        // Eksempel på event handler for eventet "RFID Detected" fra tilstandsdiagrammet for klassen
 
         private void RFIDDetectedHandleEvent(Object o, ScanEventArgs e)
         {
@@ -59,14 +63,14 @@ namespace ChargingStationClassLib.Models
                 _door.UnlockDoor();
                 _display.ShowMessage($"ID: {e.ID} scannet. Dør låst op");
             }
+
             else if (_state == ChargingStationState.Locked)
             {
-                string message = "";
-
                 if (_oldId == e.ID)
                 {
                     message = "Rfid-kort scannet og godkendt - Skab låses op";
                     _door.UnlockDoor();
+                    _state = ChargingStationState.Available;
                 }
                 else
                     message = "Rfid-kort scannet - Skab allerede i brug";
@@ -74,28 +78,39 @@ namespace ChargingStationClassLib.Models
                 _display.ShowMessage(message);
                 _log.WriteToLog(message);
             }
+
             else
             {
-                string message = "Please close the door";
+                message = "Please close the door";
                 _display.ShowMessage(message);
             }
-
-
         }
 
         private void DoorClosedHandleEvent(object o, DoorMoveEventArgs e)
         {
-            string message = "";
-
-            if (!e.HasOpened)
+            if (!e.HasOpened && _state == ChargingStationState.Available && _usbCharger.Connected)
             {
-                message = "Door locked";
                 _door.LockDoor();
                 _chargeControl.StartCharge();
+                message = "Door locked";
+                _state = ChargingStationState.Locked;
+            }
+
+            else if (!e.HasOpened && _state == ChargingStationState.Available && !_usbCharger.Connected)
+            {
+                message = "Please connect phone";
+            }
+
+            else if (!e.HasOpened && _state == ChargingStationState.Locked)
+            {
+                _state = ChargingStationState.Available;
             }
 
             else
+            {
+                _state = ChargingStationState.Opened;
                 message = "Please close door";
+            }
 
             _display.ShowMessage(message);
             _log.WriteToLog(message);
@@ -104,8 +119,6 @@ namespace ChargingStationClassLib.Models
 
         private void ChargerHandleEvent(object sender, ChargerEventArgs CEA)
         {
-            string message = "";
-
             ChargeWatt = CEA.Current;
 
             if (ChargeWatt > 0 && ChargeWatt <= 5)

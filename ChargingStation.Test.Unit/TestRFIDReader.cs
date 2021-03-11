@@ -1,12 +1,14 @@
 using System;
 using ChargingStationClassLib.Models;
+using NSubstitute;
+using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
 
 namespace ChargingStation.Test.Unit
 {
     public class TestRFIDReader
     {
-        private IRFIDReader _uut;
+        private RFIDReader _uut;
         private ScanEventArgs _receivedScanEventArgs;
 
         [SetUp]
@@ -30,12 +32,6 @@ namespace ChargingStation.Test.Unit
         }
 
         [Test]
-        public void CardIDPropertySetGetNegativeInt_ExceptionThrown()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => _uut.CardID = -50);
-        }
-
-        [Test]
         public void SetCardID_ToNewID_CorrectIDReceivedByEvent()
         {
             _uut.CardID = 50;
@@ -52,6 +48,14 @@ namespace ChargingStation.Test.Unit
             _uut.CardID = 50;
 
             Assert.That(_receivedScanEventArgs, Is.Not.Null);
+        }
+
+        [Test]
+        public void CardIDPropertySetGetNegativeInt_idErrorCalled()
+        {
+            _uut.CardID = -50;
+
+            Assert.IsTrue(_uut.Error);
         }
     }
 }
