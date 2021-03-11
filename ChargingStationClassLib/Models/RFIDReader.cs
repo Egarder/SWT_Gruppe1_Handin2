@@ -48,7 +48,7 @@ namespace ChargingStationClassLib.Models
             ScanEvent?.Invoke(this,e);
         }
 
-        public bool idError()
+        internal static bool idError()
         {
             Console.WriteLine(" Invalid card ID, has to be positive");
             return true;
