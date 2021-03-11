@@ -42,6 +42,8 @@ namespace ChargingStationClassLib.Models
         private int _oldId;
         private ChargingStationState _state;
 
+
+        private string message = "";
         public double ChargeWatt { get; set; }
 
 
@@ -53,10 +55,9 @@ namespace ChargingStationClassLib.Models
                 _door.UnlockDoor();
                 _display.ShowMessage($"ID: {e.ID} scannet. Dør låst op");
             }
+
             else if (_state == ChargingStationState.Locked)
             {
-                string message = "";
-
                 if (_oldId == e.ID)
                 {
                     message = "Rfid-kort scannet og godkendt - Skab låses op";
@@ -68,23 +69,27 @@ namespace ChargingStationClassLib.Models
                 _display.ShowMessage(message);
                 _log.WriteToLog(message);
             }
+
             else
             {
-                string message = "Please close the door";
+                message = "Please close the door";
                 _display.ShowMessage(message);
             }
         }
 
         private void DoorClosedHandleEvent(object o, DoorMoveEventArgs e)
         {
-            string message = "";
-
-            if (!e.HasOpened)
+            if (!e.HasOpened && _state == ChargingStationState.Available && _usbCharger.Connected)
             {
                 _door.LockDoor();
                 _chargeControl.StartCharge();
                 message = "Door locked";
                 _state = ChargingStationState.Locked;
+            }
+
+            else if (!e.HasOpened && _state == ChargingStationState.Available && !_usbCharger.Connected)
+            {
+                message = "Please connect phone";
             }
 
             else
@@ -97,8 +102,6 @@ namespace ChargingStationClassLib.Models
 
         private void ChargerHandleEvent(object sender, ChargerEventArgs CEA)
         {
-            string message = "";
-
             ChargeWatt = CEA.Current;
 
             if (ChargeWatt > 0 && ChargeWatt <= 5)
