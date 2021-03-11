@@ -14,12 +14,12 @@ namespace ChargingStation.Test.Unit
     {
         private LogFile _uut;
         private StreamReader _reader;
-
+        private string _fileName;
         [SetUp]
         public void Setup()
         {
-            _uut = new LogFile("LogFile.txt");
-            _reader = 
+            _uut = new LogFile(_fileName);
+            _reader = new StreamReader(_fileName);
         }
 
 
