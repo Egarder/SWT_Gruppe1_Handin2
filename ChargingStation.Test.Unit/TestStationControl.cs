@@ -61,8 +61,10 @@ namespace ChargingStation.Test.Unit
 
         //Door handler tests
         [Test]
-        public void DoorClosed_ChargingStateAvailableUSBChargerConnected()
+        public void DoorClosed_ChargingStateAvailableUSBChargerConnected_DoorLocked()
         {
+            _uut.State = StationControl.ChargingStationState.Available;
+            _usbccharge.Connected = true;
             
 
             _door.CloseDoor();
@@ -82,7 +84,26 @@ namespace ChargingStation.Test.Unit
         public void ChargeChanged_CurrentUnderFiveShowMessage_ShowMessage()
         {
             _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
-            _logfile.WriteToLog("");
+            _display.Received(1).ShowMessage("");
+        }
+        [Test]
+        public void ChargeChanged_CurrentUnderFiveShowMessage_WriteLog()
+        {
+            _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
+            _logfile.Received(1).WriteToLog("");
+        }
+
+        [Test]
+        public void ChargeChanged_CurrentOverFiveHundredShowMessage_ShowMessage()
+        {
+            _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 502 });
+            _display.Received(1).ShowMessage("");
+        }
+        [Test]
+        public void ChargeChanged_CurrentOverFiveHundredShowMessage_WriteLog()
+        {
+            _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 502 });
+            _logfile.Received(1).WriteToLog("");
         }
 
     }
