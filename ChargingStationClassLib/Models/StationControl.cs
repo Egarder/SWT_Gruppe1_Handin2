@@ -9,13 +9,12 @@ namespace ChargingStationClassLib.Models
 {
     public class StationControl
     {
-        public StationControl(IDoor door, IUsbCharger charger, ILogFile log, IRFIDReader rfid)
+        public StationControl(IDoor door, ILogFile log, IRFIDReader rfid, IChargeControl chargeControl, IUsbCharger usbCharger)
         {
-            
             _door = door;
-            _charger = charger;
             _log = log;
             _rfid = rfid;
+            _chargeControl = chargeControl;
 
             _charger.ChargeEvent += ChargerHandleEvent;
             _rfid.ScanEvent += RFIDDetectedHandleEvent;
@@ -38,8 +37,8 @@ namespace ChargingStationClassLib.Models
         private IDoor _door;
         private IDisplay _display;
         private IRFIDReader _rfid;
+        private IUsbCharger _usbCharger; 
         private int _oldId;
-        private int _id;
         private ChargingStationState _state;
 
         public double ChargeWatt { get; set; }
@@ -62,45 +61,59 @@ namespace ChargingStationClassLib.Models
 
             else if (_state == ChargingStationState.Locked)
             {
+                string message = "";
+
                 if (_oldId == e.ID)
-                    _display.ShowMessage("");
+                {
+                    message = "Rfid-kort scannet og godkendt - Skab låses op";
+                    _door.UnlockDoor();
+                }
+                else
+                    message = "Rfid-kort scannet - Skab allerede i brug";
+
+                _display.ShowMessage(message);
+                _log.WriteToLog(message);
             }
         }
 
-
-        private void DoorMovementStateChanged(Object o, DoorMoveEventArgs e)
+        private void DoorClosedHandleEvent(object o, DoorMoveEventArgs e)
         {
-            if (e.HasOpened)
-                _display.ShowMessage("Door opened");
+            string message = "";
 
-            else if (!e.HasOpened)
-                _display.ShowMessage("Door closed");
+            if (!e.HasOpened)
+            {
+                message = "Door locked";
+                _door.LockDoor();
+               
+                _ch
+            }
+
+            else
+                message = "Please close door";
+
+            _display.ShowMessage(message);
+            _log.WriteToLog(message);
+
         }
 
-        private void DoorLockStateChanged(Object o, DoorLockEventArgs e)
-        {
-            if (e.IsLocked)
-                _display.ShowMessage("Door Locked");
-
-            else if (!e.IsLocked)
-                _display.ShowMessage("Door Unlocked");
-        }
 
         private void ChargerHandleEvent(object sender, ChargerEventArgs CEA)
         {
+            string message = "";
+
             ChargeWatt = CEA.Current;
+
             if (ChargeWatt > 0 && ChargeWatt <= 5)
-            {
-                _display.ShowMessage("Phone fully charged");
-            }
+                message = "Phone fully charged";
+
             else if (ChargeWatt > 500)
-            {
-                _display.ShowMessage("ERROR! Faulty Charger!");
-            }
+                message = "ERROR! Faulty Charger!";
+
             else
-            {
-                _display.ShowMessage("Charing");
-            }
+                message = "Charging";
+
+            _display.ShowMessage(message);
+            _log.WriteToLog(message);
         }
 
 
