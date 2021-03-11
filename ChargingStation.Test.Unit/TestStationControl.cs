@@ -37,11 +37,16 @@ namespace ChargingStation.Test.Unit
 
 
         //Functional tests
-        [Test]
-        public void DoorOpened_
+        //[Test]
+        //public void DoorOpened_
 
 
         //Behavioral test
+        [Test]
+        public void ChargeChanged_CurrentUnderFiveShowMessage_ShowMessage()
+        {
+            _
+        }
 
     }
 }
