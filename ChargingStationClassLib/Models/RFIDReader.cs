@@ -21,11 +21,24 @@ namespace ChargingStationClassLib.Models
             get { return cardID; }
             set
             {
-                if (value != cardID)
+                try
                 {
-                    OnScanEvent(new ScanEventArgs{ ID =value}); //Notifies when cardID is set
-                    cardID = value;
+                    if (cardID >= 0)
+                    {
+                        if (value != cardID)
+                        {
+                            OnScanEvent(new ScanEventArgs { ID = value }); //Notifies when cardID is set
+                            cardID = value;
+                        }
+                    }
                 }
+                catch (ArgumentOutOfRangeException e)
+                {
+                    Console.WriteLine(e+" Invalid card ID, has to be positive");
+                    throw;
+                }
+                
+                
             } 
         }
 

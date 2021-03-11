@@ -1,3 +1,4 @@
+using System;
 using ChargingStationClassLib.Models;
 using NUnit.Framework;
 
@@ -29,7 +30,13 @@ namespace ChargingStation.Test.Unit
         }
 
         [Test]
-        public void SetCardID_ToNewID_CorrectIDReceived()
+        public void CardIDPropertySetGetNegativeInt_ExceptionThrown()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => _uut.CardID = -50);
+        }
+
+        [Test]
+        public void SetCardID_ToNewID_CorrectIDReceivedByEvent()
         {
             _uut.CardID = 50;
 
