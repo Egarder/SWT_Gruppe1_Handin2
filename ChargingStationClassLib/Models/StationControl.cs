@@ -9,13 +9,14 @@ namespace ChargingStationClassLib.Models
 {
     public class StationControl
     {
-        public StationControl(IDoor door, ILogFile log, IRFIDReader rfid, IChargeControl chargeControl, IUsbCharger usbCharger)
+        public StationControl(IDoor door, ILogFile log, IRFIDReader rfid, IChargeControl chargeControl, IUsbCharger usbCharger, IDisplay display)
         {
             _door = door;
             _log = log;
             _rfid = rfid;
             _usbCharger = usbCharger;
             _chargeControl = chargeControl;
+            _display = display;
 
             _usbCharger.ChargeEvent += ChargerHandleEvent;
             _rfid.ScanEvent += RFIDDetectedHandleEvent;

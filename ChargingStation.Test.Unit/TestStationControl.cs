@@ -27,10 +27,10 @@ namespace ChargingStation.Test.Unit
             _door = Substitute.For<IDoor>();
             _rfid = Substitute.For<IRFIDReader>();
             _usbccharge = Substitute.For<IUsbCharger>();
-            _display = new Display();
+            _display = Substitute.For<IDisplay>();
             _chargecontrol = new ChargeControl(_usbccharge);
 
-            _uut = new StationControl(_door, _logfile, _rfid, _chargecontrol, _usbccharge); //Injects including fakes
+            _uut = new StationControl(_door, _logfile, _rfid, _chargecontrol, _usbccharge, _display); //Injects including fakes
         }
 
 
@@ -104,15 +104,14 @@ namespace ChargingStation.Test.Unit
         public void ChargeChanged_CurrentUnderFiveShowMessage_ShowMessage()
         {
             _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
-            _display.Received(1).ShowMessage("");
+            _display.Received(1).ShowMessage(Arg.Any<string>());
         }
+
         [Test]
         public void ChargeChanged_CurrentUnderFiveShowMessage_WriteLog()
         {
-            var _usb = Substitute.For<IUsbCharger>();
-            var _log = Substitute.For<ILogFile>();
-            _usb.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
-            _log.Received(1).WriteToLog(Arg.Any<string>());
+            _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
+            _logfile.Received(1).WriteToLog(Arg.Any<string>());
         }
 
         [Test]
