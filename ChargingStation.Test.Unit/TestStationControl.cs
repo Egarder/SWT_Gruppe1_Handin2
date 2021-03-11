@@ -12,12 +12,12 @@ namespace ChargingStation.Test.Unit
     class TestStationController
     {
         private StationControl _uut;
-        private ILogFile _logfile = new LogFile();
-        private IDisplay _display = new Display();
-        private IDoor _door = new Door();
-        private IRFIDReader _rfid = new RFIDReader();
-        private IUsbCharger _uscbcharge = new UsbCharger();
-        private IChargeControl _chargecontrol = new ChargeControl(_uscbcharge);
+        private ILogFile _logfile;
+        private IDisplay _display;
+        private IDoor _door;
+        private IRFIDReader _rfid;
+        private IUsbCharger _uscbcharge;
+        private IChargeControl _chargecontrol;
 
         [SetUp]
         public void setup()
