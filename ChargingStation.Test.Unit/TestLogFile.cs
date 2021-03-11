@@ -29,7 +29,7 @@ namespace ChargingStation.Test.Unit
         [TestCase("Denne linje er lang")]
         public void WriteToFile_1TimeDifferentStrings_FileExists(string text)
         {
-            _uut.WriteToFile(text);
+            _uut.WriteToLog(text);
             Assert.That(File.Exists(_fileName), Is.EqualTo(true));
         }
 
@@ -37,7 +37,7 @@ namespace ChargingStation.Test.Unit
         [TestCase("Denne linje er lang")]
         public void WriteToFile_1TimeDifferentStrings_CorrectTextWrittenToFile(string text)
         {
-            _uut.WriteToFile(text);
+            _uut.WriteToLog(text);
             Assert.That(_reader.ReadLine(),Is.EqualTo(text));
         }
 
@@ -46,8 +46,8 @@ namespace ChargingStation.Test.Unit
         public void WriteToFile_MultipleTimesDifferentStrings_CorrectTextWrittenToFile(string text1,string text2)
         {
             //act on file
-            _uut.WriteToFile(text1);
-            _uut.WriteToFile(text2);
+            _uut.WriteToLog(text1);
+            _uut.WriteToLog(text2);
 
             //read on file
             string str = _reader.ReadToEnd();

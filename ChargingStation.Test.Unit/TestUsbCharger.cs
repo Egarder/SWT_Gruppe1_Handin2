@@ -42,7 +42,7 @@ namespace ChargingStation.Test.Unit
         public void Started_WaitSomeTime_ReceivedSeveralValues()
         {
             int numValues = 0;
-            _uut.CurrentValueEvent += (o, args) => numValues++;
+            _uut.ChargeEvent += (o, args) => numValues++;
 
             _uut.StartCharge();
 
@@ -55,7 +55,7 @@ namespace ChargingStation.Test.Unit
         public void Started_WaitSomeTime_ReceivedChangedValue()
         {
             double lastValue = 1000;
-            _uut.CurrentValueEvent += (o, args) => lastValue = args.Current;
+            _uut.ChargeEvent += (o, args) => lastValue = args.Current;
 
             _uut.StartCharge();
 
@@ -78,7 +78,7 @@ namespace ChargingStation.Test.Unit
         public void Started_WaitSomeTime_PropertyMatchesReceivedValue()
         {
             double lastValue = 1000;
-            _uut.CurrentValueEvent += (o, args) => lastValue = args.Current;
+            _uut.ChargeEvent += (o, args) => lastValue = args.Current;
 
             _uut.StartCharge();
 
@@ -94,7 +94,7 @@ namespace ChargingStation.Test.Unit
             ManualResetEvent pause = new ManualResetEvent(false);
             double lastValue = 0;
 
-            _uut.CurrentValueEvent += (o, args) =>
+            _uut.ChargeEvent += (o, args) =>
             {
                 lastValue = args.Current;
                 pause.Set();
@@ -121,7 +121,7 @@ namespace ChargingStation.Test.Unit
             ManualResetEvent pause = new ManualResetEvent(false);
             double lastValue = 1000;
 
-            _uut.CurrentValueEvent += (o, args) =>
+            _uut.ChargeEvent += (o, args) =>
             {
                 lastValue = args.Current;
                 pause.Set();
@@ -148,7 +148,7 @@ namespace ChargingStation.Test.Unit
         {
             double lastValue = 0;
 
-            _uut.CurrentValueEvent += (o, args) =>
+            _uut.ChargeEvent += (o, args) =>
             {
                 lastValue = args.Current;
             };
@@ -169,7 +169,7 @@ namespace ChargingStation.Test.Unit
         {
             double lastValue = 1000;
 
-            _uut.CurrentValueEvent += (o, args) =>
+            _uut.ChargeEvent += (o, args) =>
             {
                 lastValue = args.Current;
             };
@@ -189,7 +189,7 @@ namespace ChargingStation.Test.Unit
         public void StopCharge_IsCharging_ReceivesZeroValue()
         {
             double lastValue = 1000;
-            _uut.CurrentValueEvent += (o, args) => lastValue = args.Current;
+            _uut.ChargeEvent += (o, args) => lastValue = args.Current;
 
             _uut.StartCharge();
 
@@ -216,7 +216,7 @@ namespace ChargingStation.Test.Unit
         public void StopCharge_IsCharging_ReceivesNoMoreValues()
         {
             double lastValue = 1000;
-            _uut.CurrentValueEvent += (o, args) => lastValue = args.Current;
+            _uut.ChargeEvent += (o, args) => lastValue = args.Current;
 
             _uut.StartCharge();
 
