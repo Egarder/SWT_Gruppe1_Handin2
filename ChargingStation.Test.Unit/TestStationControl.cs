@@ -56,8 +56,10 @@ namespace ChargingStation.Test.Unit
 
         //Door handler tests
         [Test]
-        public void DoorClosed_ChargingStateAvailableUSBChargerConnected()
+        public void DoorClosed_ChargingStateAvailableUSBChargerConnected_DoorLocked()
         {
+            _uut.State = StationControl.ChargingStationState.Available;
+            _usbccharge.Connected = true;
             
 
             _door.CloseDoor();
