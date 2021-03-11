@@ -10,19 +10,11 @@ namespace ChargingStationClassLib.Models
 {
     public class LogFile : ILogFile
     {
-        public LogFile(IRFIDReader reader)
+        public LogFile(IRFIDReader reader, IDoor door)
         {
             reader.ScanEvent += ScanEventHandler;
-        }
-
-        public void LogDoorLocked(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void LogDoorUnlocked(int id)
-        {
-            throw new NotImplementedException();
+            door.DoorLockEvent += DoorLockEventHandler;
+            door.DoorMoveEvent += DoorMoveEventHandler;
         }
 
         private void ScanEventHandler(object o, ScanEventArgs e)
