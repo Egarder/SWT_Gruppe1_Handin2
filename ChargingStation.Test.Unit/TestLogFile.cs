@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,26 +13,23 @@ namespace ChargingStation.Test.Unit
     class TestLogFile
     {
         private LogFile _uut;
-        private IRFIDReader _reader;
-        private IDoor _door;
-        private ScanEventArgs _receivedScanEventArgs;
+        private StreamReader _reader;
 
         [SetUp]
         public void Setup()
         {
-            _receivedScanEventArgs = null;
-            _reader = Substitute.For<IRFIDReader>();
-            _door = Substitute.For<IDoor>();
-            _uut = new LogFile(_reader,_door);
+            _uut = new LogFile("LogFile.txt");
+            _reader = 
         }
 
 
-        [TestCase(true)]
-        [TestCase(false)]
-        public void WriteToFile_DoorOpened_WrittenToFile(bool opened)
+        [TestCase("Denne linje er flot")]
+        [TestCase("Denne linje er lang")]
+        public void WriteToFile_1TimeDifferentStrings_CorrectTextWrittenToFile(string text)
         {
-            _door.DoorMoveEvent += Raise.EventWith(new DoorMoveEventArgs {HasOpened = opened});
-            _uut.Received(1).
+            _uut.WriteToFile(text);
+  
+
         }
 
         //Functional tests

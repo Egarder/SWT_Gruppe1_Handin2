@@ -10,33 +10,34 @@ namespace ChargingStationClassLib.Models
 {
     public class LogFile : ILogFile
     {
-        public LogFile(IRFIDReader reader, IDoor door)
+        public LogFile(string fileName/*IRFIDReader reader, IDoor door*/)
         {
-            reader.ScanEvent += ScanEventHandler;
-            door.DoorLockEvent += DoorLockEventHandler;
-            door.DoorMoveEvent += DoorMoveEventHandler;
+            FileName = fileName;
+            //reader.ScanEvent += ScanEventHandler;
+            //door.DoorLockEvent += DoorLockEventHandler;
+            //door.DoorMoveEvent += DoorMoveEventHandler;
         }
 
-        private void ScanEventHandler(object o, ScanEventArgs e)
-        {
+        //private void ScanEventHandler(object o, ScanEventArgs e)
+        //{
+        //    _ = WriteToFile("RFID Card ID:" + e.ID.ToString());
+        //}
 
-            _ = WriteToFile("RFID Card ID:" + e.ID.ToString());
+        //private void DoorMoveEventHandler(object o, DoorMoveEventArgs e)
+        //{
+        //    _ = WriteToFile("Door has been opened: " + e.HasOpened.ToString());
+        //}
+
+        //private void DoorLockEventHandler(object o, DoorLockEventArgs e)
+        //{
+        //    _ = WriteToFile("Door Is locked: " + e.IsLocked.ToString());
+        //}
+        public async Task WriteToFile(string text)
+        {
+            await using StreamWriter file = new(FileName, append: true);
+            await file.WriteLineAsync(DateTime.Now.ToShortDateString() + ": " + text);
         }
 
-        private void DoorMoveEventHandler(object o, DoorMoveEventArgs e)
-        {
-            _ = WriteToFile("Door has been opened: " + e.HasOpened.ToString());
-        }
-
-        private void DoorLockEventHandler(object o, DoorLockEventArgs e)
-        {
-            _ = WriteToFile("Door Is locked: " + e.IsLocked.ToString());
-        }
-
-        private static async Task WriteToFile(string line)
-        {
-            await using StreamWriter file = new("LogFile.txt", append: true);
-            await file.WriteLineAsync(DateTime.Now.ToShortDateString() + ": " + line);
-        }
+        public string FileName { get; set; }
     }
 }
