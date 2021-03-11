@@ -2,7 +2,7 @@
 
 namespace ChargingStationClassLib.Models
 {
-    public class CurrentEventArgs : EventArgs
+    public class ChargerEventArgs : EventArgs
     {
         // Value in mA (milliAmpere)
         public double Current { set; get; }
@@ -11,7 +11,8 @@ namespace ChargingStationClassLib.Models
     public interface IUsbCharger
     {
         // Event triggered on new current value
-        event EventHandler<CurrentEventArgs> CurrentValueEvent;
+        //event EventHandler<CurrentEventArgs> CurrentValueEvent;
+        event EventHandler<ChargerEventArgs> ChargeEvent;
 
         // Direct access to the current current value
         double CurrentValue { get; }

@@ -12,7 +12,8 @@ namespace ChargingStationClassLib.Models
         private const int ChargeTimeMinutes = 20; // minutes
         private const int CurrentTickInterval = 250; // ms
 
-        public event EventHandler<CurrentEventArgs> CurrentValueEvent;
+        //public event EventHandler<CurrentEventArgs> CurrentValueEvent;
+        public event EventHandler<ChargerEventArgs> ChargeEvent;
 
         public double CurrentValue { get; private set; }
 
@@ -109,7 +110,7 @@ namespace ChargingStationClassLib.Models
 
         private void OnNewCurrent()
         {
-            CurrentValueEvent?.Invoke(this, new CurrentEventArgs() {Current = this.CurrentValue});
+            ChargeEvent?.Invoke(this, new ChargerEventArgs() {Current = this.CurrentValue});
         }
     }
 }
