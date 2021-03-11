@@ -21,13 +21,13 @@ namespace ChargingStation.Test.Unit
         private IChargeControl _chargecontrol;
 
         [SetUp]
-        public void setup()
+        public void Setup()
         {
             _logfile = Substitute.For<ILogFile>();
-            _display = new Display();
-            _door = new Door();
+            _door = Substitute.For<IDoor>();
             _rfid = Substitute.For<IRFIDReader>();
             _usbccharge = Substitute.For<IUsbCharger>();
+            _display = new Display();
             _chargecontrol = new ChargeControl(_usbccharge);
 
             _uut = new StationControl(_door, _logfile, _rfid, _chargecontrol, _usbccharge); //Injects including fakes
