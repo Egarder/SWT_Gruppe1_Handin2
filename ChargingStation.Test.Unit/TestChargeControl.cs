@@ -41,5 +41,14 @@ namespace ChargingStation.Test.Unit
             _usbChargerSource.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 505 });
             _usbChargerSource.Received(1).StopCharge();
         }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void IsConnected_ChargerConnectedTrue_ReturnsTrue(bool testBool)
+        {
+            _usbChargerSource.Connected = testBool;
+
+            Assert.That(_uut.IsConnected,Is.EqualTo(testBool));
+        }
     }
 }
