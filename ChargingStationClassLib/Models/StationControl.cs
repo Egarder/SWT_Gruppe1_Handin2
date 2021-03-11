@@ -9,6 +9,14 @@ namespace ChargingStationClassLib.Models
 {
     public class StationControl
     {
+        public StationControl(IDoor door, IUsbCharger charger)
+        {
+            _door = door;
+            _charger = charger;
+            _log = log;
+        }
+
+
         // Enum med tilstande ("states") svarende til tilstandsdiagrammet for klassen
         private enum ChargingStationState
         {
@@ -22,6 +30,7 @@ namespace ChargingStationClassLib.Models
         private IUsbCharger _charger;
         private IDoor _door;
         private int _oldId;
+        private int _id;
 
         private string logFile = "logfile.txt"; // Navnet på systemets log-fil
 
@@ -81,6 +90,6 @@ namespace ChargingStationClassLib.Models
             }
         }
 
-        // Her mangler de andre trigger handlere
+
     }
 }

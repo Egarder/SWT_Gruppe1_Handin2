@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace ChargingStationClassLib.Models
 {
-    public class ScanEventArgs: EventArgs
+    public interface ILogFile
     {
-        public int ID { get; set; }
+        public void LogDoorLocked(int id);
+        public void LogDoorUnlocked(int id);
     }
 }

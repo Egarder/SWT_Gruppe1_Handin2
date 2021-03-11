@@ -18,31 +18,53 @@ namespace ChargingStationClassLib.Models
 
     class Door : IDoor
     {
+        private bool Locked { get; set; }
+        private bool Closed { get; set; }
+
+
         public event EventHandler<DoorLockEventArgs> DoorLockEvent;
         public event EventHandler<DoorMoveEventArgs> DoorMoveEvent;
 
         public Door()
         {
-            
+            Locked = false;
+            Closed = true;
         }
+
         public void OpenDoor()
         {
-            OnDoorMoveEvent(new DoorMoveEventArgs { HasOpened = true });
+            if (!Locked && Closed)
+            {
+                Closed = false;
+                OnDoorMoveEvent(new DoorMoveEventArgs { HasOpened = true });
+            }
         }
 
         public void CloseDoor()
         {
-            OnDoorMoveEvent(new DoorMoveEventArgs { HasOpened = false });
+            if (!Closed)
+            {
+                Closed = true;
+                OnDoorMoveEvent(new DoorMoveEventArgs { HasOpened = false });
+            }
         }
 
         public void LockDoor()
         {
-            OnDoorLockEvent(new DoorLockEventArgs { IsLocked = true });
+            if (!Locked && Closed)
+            {
+                Locked = true;
+                OnDoorLockEvent(new DoorLockEventArgs { IsLocked = true });
+            }
         }
 
         public void UnlockDoor()
         {
-            OnDoorLockEvent(new DoorLockEventArgs { IsLocked = false });
+            if (Locked && Closed)
+            {
+                Locked = false;
+                OnDoorLockEvent(new DoorLockEventArgs { IsLocked = false });
+            }
         }
 
         protected virtual void OnDoorMoveEvent(DoorMoveEventArgs e)
@@ -54,5 +76,6 @@ namespace ChargingStationClassLib.Models
         {
             DoorLockEvent?.Invoke(this, e);
         }
+
     }
 }
