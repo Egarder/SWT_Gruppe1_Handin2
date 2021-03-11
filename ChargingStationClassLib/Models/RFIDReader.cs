@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace ChargingStationClassLib.Models
 {
+    public class ScanEventArgs : EventArgs
+    {
+        public int ID { get; set; }
+    }
+
     public class RFIDReader: IRFIDReader
     {
         public event EventHandler<ScanEventArgs> ScanEvent;
