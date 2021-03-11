@@ -38,11 +38,24 @@ namespace ChargingStation.Test.Unit
 
         //Door handler tests
         [Test]
-        public void DoorOpened_
+        public void DoorClosed_ChargingStateAvailableUSBChargerConnected()
+        {
+            _uut
+
+            _door.CloseDoor();
+        }
 
 
-        //Behavioral test
-        [Test]
+        if (!e.HasOpened && _state == ChargingStationState.Available && _usbCharger.Connected)
+        {
+            _door.LockDoor();
+            _chargeControl.StartCharge();
+            message = "Door locked";
+            _state = ChargingStationState.Locked;
+        }
+
+    //Behavioral test
+    [Test]
         public void ChargeChanged_CurrentUnderFiveShowMessage_ShowMessage()
         {
             _
