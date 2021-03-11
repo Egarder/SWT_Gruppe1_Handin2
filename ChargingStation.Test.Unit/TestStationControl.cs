@@ -60,6 +60,11 @@ namespace ChargingStation.Test.Unit
 
 
         //Behavioral test
+        [Test]
+        public void ChargeChanged_CurrentUnderFiveShowMessage_ShowMessage()
+        {
+            _
+        }
 
     }
 }
