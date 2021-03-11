@@ -23,7 +23,7 @@ namespace ChargingStationClassLib.Models
             //door.DoorMoveEvent += DoorMoveEventHandler;
         }
 
-        public async void WriteToFile(string text)
+        public async void WriteToLog(string text)
         {
             await WriteToFileTask(text);
         }
