@@ -47,29 +47,27 @@ namespace ChargingStation.Test.Unit
         [TestCase(1234)]
         public void RFIDEventhandler_stateAvailable_oldIdIsSet(int id)
         {
-            _uut.OldId = 0;
-            _rfid.CardID = id;
-
-            //Act:
             _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs {ID = id});
 
-           //Assert:
             Assert.That(_uut.OldId, Is.EqualTo(id));
         }
 
         [TestCase(50)]
+        [TestCase(1234)]
         public void RFIDEventhandler_stateAvailable_unlockDoorIsCalled( int id)
         {
-            //Act:
             _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
 
             _door.Received(1).UnlockDoor();
         }
 
-        [Test]
-        public void RFIDEventhandler_stateAvailable_ShowMessageIsCalled()
+        [TestCase(50)]
+        [TestCase(1234)]
+        public void RFIDEventhandler_stateAvailable_ShowMessageIsCalled(int id)
         {
+            _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
 
+            _display.Received(1).ShowMessage(Arg.Any<string>());
         }
 
         //Door handler tests
