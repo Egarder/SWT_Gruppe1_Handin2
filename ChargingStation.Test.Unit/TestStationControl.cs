@@ -17,6 +17,6 @@ namespace ChargingStation.Test.Unit
         {
         }
 
-        }
+        
     }
 }
