@@ -129,6 +129,8 @@ namespace ChargingStation.Test.Unit
             _logfile.WriteToLog(Arg.Any<string>(), Arg.Any<DateTime>());
         }
 
+        //===================================  **HER MANGLER AT BLIVE TESTET DET SIDSTE ELSE STATEMENT I rfidHANDLEREN****=======================================
+
         //Door handler tests
         [Test]
         public void DoorClosed_ChargingStateAvailableUSBChargerConnected_DoorLocked()
