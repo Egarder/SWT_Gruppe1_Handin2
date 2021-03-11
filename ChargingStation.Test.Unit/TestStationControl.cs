@@ -38,7 +38,7 @@ namespace ChargingStation.Test.Unit
 
         //Functional tests
         [Test]
-        public void 
+        public void DoorOpened_
 
 
         //Behavioral test
