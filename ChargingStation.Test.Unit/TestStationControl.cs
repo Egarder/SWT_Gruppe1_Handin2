@@ -77,6 +77,12 @@ namespace ChargingStation.Test.Unit
         public void ChargeChanged_CurrentUnderFiveShowMessage_ShowMessage()
         {
             _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
+            _display.ShowMessage("");
+        }
+        [Test]
+        public void ChargeChanged_CurrentUnderFiveShowMessage_WriteLog()
+        {
+            _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
             _logfile.WriteToLog("");
         }
 
