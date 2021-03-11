@@ -29,6 +29,7 @@ namespace ChargingStationClassLib.Models
             if (!Locked && Closed)
             {
                 Closed = false;
+                Console.WriteLine("Door opened");
                 OnDoorMoveEvent(new DoorMoveEventArgs { HasClosed = false });
             }
         }
@@ -38,6 +39,7 @@ namespace ChargingStationClassLib.Models
             if (!Closed)
             {
                 Closed = true;
+                Console.WriteLine("Door closed");
                 OnDoorMoveEvent(new DoorMoveEventArgs { HasClosed = true });
             }
         }
@@ -47,6 +49,7 @@ namespace ChargingStationClassLib.Models
             if (!Locked && Closed)
             {
                 Locked = true;
+                Console.WriteLine("Door Locked");
             }
         }
 
@@ -55,6 +58,7 @@ namespace ChargingStationClassLib.Models
             if (Locked && Closed)
             {
                 Locked = false;
+                Console.WriteLine("Door unlocked");
             }
         }
 

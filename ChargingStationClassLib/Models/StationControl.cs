@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,7 @@ namespace ChargingStationClassLib.Models
 
             _state = ChargingStationState.Available;
             _usbCharger.Connected = false;
-            _oldId = 0;
+            _oldId = -1;
         }
 
         // Enum med tilstande ("states") svarende til tilstandsdiagrammet for klassen
@@ -61,7 +62,7 @@ namespace ChargingStationClassLib.Models
         {
             if (_state == ChargingStationState.Available)
             {
-                message = $"ID: {e.ID} scanned. Door Unlocked. Please Open Door";
+                message = $"ID: {e.ID} scanned. Please Open Door";
                 _oldId = e.ID;
                 _door.UnlockDoor();
                 _display.ShowMessage(message);
@@ -71,7 +72,7 @@ namespace ChargingStationClassLib.Models
             {
                 if (_oldId == e.ID)
                 {
-                    message = "ID Scanned and approved - Door Unlocked";
+                    message = "ID Scanned and approved";
                     _door.UnlockDoor();
                     _state = ChargingStationState.Available;
                 }
@@ -91,33 +92,46 @@ namespace ChargingStationClassLib.Models
 
         private void DoorClosedHandleEvent(object o, DoorMoveEventArgs door)
         {
-            if (door.HasClosed && _state == ChargingStationState.Available && _usbCharger.Connected)
+            if (_oldId < 0)
             {
-                _door.LockDoor();
-                _chargeControl.StartCharge();
-                message = "Door locked";
-                _state = ChargingStationState.Locked;
-            }
-
-            else if (door.HasClosed && _state == ChargingStationState.Available && !_usbCharger.Connected)
-            {
-                message = "Please connect phone";
-            }
-
-            else if (door.HasClosed && _state == ChargingStationState.Locked)
-            {
-                _state = ChargingStationState.Available;
-            }
-
-            else if (_oldId != 0)
-            {
-                _state = ChargingStationState.Opened;
-                message = "Door Opened. Please Connect Phone";
+                message = "Please scan Card";
             }
 
             else
             {
-                message = "Door locked. Please scan Card";
+                switch (door.HasClosed)
+                {
+                    case true:
+
+                        if (_state == ChargingStationState.Opened)
+                        {
+                            if (_usbCharger.Connected)
+                            {
+                                _door.LockDoor();
+                                _chargeControl.StartCharge();
+                                _state = ChargingStationState.Locked;
+                                message = "Charging started";
+                            }
+
+                            else
+                            {
+                                message = "Please connect phone";
+                            }
+                        }
+
+                        else if (_state == ChargingStationState.Locked)
+                        {
+                            _state = ChargingStationState.Available;
+                        }
+
+                        break;
+
+
+                    case false:
+                        _state = ChargingStationState.Opened;
+                        message = "Door Opened. Please Connect Phone";
+                        break;
+                }
             }
 
             _display.ShowMessage(message);

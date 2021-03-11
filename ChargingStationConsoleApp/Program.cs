@@ -46,7 +46,7 @@ namespace ChargingStationConsoleApp
 
                     case 'P':
                         usbCharger.Connected = true;
-                        Console.WriteLine("Phone connected");
+                        Console.WriteLine("Phone connected. Please close Door");
                         break;
                     default:
                         break;
