@@ -9,15 +9,14 @@ namespace ChargingStationConsoleApp
         {
             // Assemble your system here from all the classes
 
-            string filename = "savefile";
-
             IDoor door = new Door();
             IRFIDReader rfidReader = new RFIDReader();
-            ILogFile logFile = new LogFile(filename);
+            ILogFile logFile = new LogFile();
             IUsbCharger usbCharger = new UsbCharger();
             IChargeControl chargeControl = new ChargeControl(usbCharger);
+            IDisplay display = new Display();
 
-            StationControl stationController = new StationControl(door, logFile, rfidReader, chargeControl, usbCharger);
+            StationControl stationController = new StationControl(door, logFile, rfidReader, chargeControl, usbCharger,display);
 
             bool finish = false;
             do

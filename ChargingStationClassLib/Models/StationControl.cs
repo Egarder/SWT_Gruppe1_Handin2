@@ -9,13 +9,14 @@ namespace ChargingStationClassLib.Models
 {
     public class StationControl
     {
-        public StationControl(IDoor door, ILogFile log, IRFIDReader rfid, IChargeControl chargeControl, IUsbCharger usbCharger)
+        public StationControl(IDoor door, ILogFile log, IRFIDReader rfid, IChargeControl chargeControl, IUsbCharger usbCharger, IDisplay display)
         {
             _door = door;
             _log = log;
             _rfid = rfid;
             _usbCharger = usbCharger;
             _chargeControl = chargeControl;
+            _display = display;
 
             _usbCharger.ChargeEvent += ChargerHandleEvent;
             _rfid.ScanEvent += RFIDDetectedHandleEvent;
@@ -42,7 +43,7 @@ namespace ChargingStationClassLib.Models
         private IChargeControl _chargeControl;
         private int _oldId;
         private ChargingStationState _state;
-
+        public DateTime TimeStamp { get; set; }
         public ChargingStationState State { get => _state; set => _state = value; }
 
 
@@ -76,7 +77,7 @@ namespace ChargingStationClassLib.Models
                     message = "Rfid-kort scannet - Skab allerede i brug";
 
                 _display.ShowMessage(message);
-                _log.WriteToLog(message);
+                _log.WriteToLog(message,TimeStamp);
             }
 
             else
@@ -86,9 +87,9 @@ namespace ChargingStationClassLib.Models
             }
         }
 
-        private void DoorClosedHandleEvent(object o, DoorMoveEventArgs e)
+        private void DoorClosedHandleEvent(object o, DoorMoveEventArgs door)
         {
-            if (!e.HasOpened && _state == ChargingStationState.Available && _usbCharger.Connected)
+            if (door.HasClosed && _state == ChargingStationState.Available && _usbCharger.Connected)
             {
                 _door.LockDoor();
                 _chargeControl.StartCharge();
@@ -96,12 +97,12 @@ namespace ChargingStationClassLib.Models
                 _state = ChargingStationState.Locked;
             }
 
-            else if (!e.HasOpened && _state == ChargingStationState.Available && !_usbCharger.Connected)
+            else if (door.HasClosed && _state == ChargingStationState.Available && !_usbCharger.Connected)
             {
                 message = "Please connect phone";
             }
 
-            else if (!e.HasOpened && _state == ChargingStationState.Locked)
+            else if (door.HasClosed && _state == ChargingStationState.Locked)
             {
                 _state = ChargingStationState.Available;
             }
@@ -113,7 +114,7 @@ namespace ChargingStationClassLib.Models
             }
 
             _display.ShowMessage(message);
-            _log.WriteToLog(message);
+            _log.WriteToLog(message, TimeStamp);
         }
 
 
@@ -131,7 +132,7 @@ namespace ChargingStationClassLib.Models
                 message = "Charging";
 
             _display.ShowMessage(message);
-            _log.WriteToLog(message);
+            _log.WriteToLog(message, TimeStamp);
         }
 
 

@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace ChargingStationClassLib.Models
 {
-    public interface ILogFile
+    public interface ILog
     {
-        public void WriteToLog(string message, DateTime timeStamp);
+        public string LogText { get; set; }
+        public DateTime TimeStamp { get; set; }
+
     }
 }
