@@ -30,7 +30,6 @@ namespace ChargingStationClassLib.Models
         {
             Available,
             Locked,
-            DoorOpen
         };
 
         // Her mangler flere member variable
@@ -45,12 +44,6 @@ namespace ChargingStationClassLib.Models
 
         public double ChargeWatt { get; set; }
 
-
-        private string logFile = "logfile.txt"; // Navnet på systemets log-fil
-
-        // Her mangler constructor
-
-        // Eksempel på event handler for eventet "RFID Detected" fra tilstandsdiagrammet for klassen
 
         private void RFIDDetectedHandleEvent(Object o, ScanEventArgs e)
         {
@@ -80,8 +73,6 @@ namespace ChargingStationClassLib.Models
                 string message = "Please close the door";
                 _display.ShowMessage(message);
             }
-
-
         }
 
         private void DoorClosedHandleEvent(object o, DoorMoveEventArgs e)
@@ -90,9 +81,10 @@ namespace ChargingStationClassLib.Models
 
             if (!e.HasOpened)
             {
-                message = "Door locked";
                 _door.LockDoor();
                 _chargeControl.StartCharge();
+                message = "Door locked";
+                _state = ChargingStationState.Locked;
             }
 
             else
