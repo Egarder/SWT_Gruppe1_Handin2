@@ -34,7 +34,25 @@ namespace ChargingStation.Test.Unit
 
 
         //RFID Handler tests
+        [Test]
+        public void RFIDEventhandler_stateAvailable_oldIdIsSet()
+        {
+            _rfid.CardID = 50;
 
+            Assert.That(_uut.);
+        }
+
+        [Test]
+        public void RFIDEventhandler_stateAvailable_unlockDoorIsCalled()
+        {
+
+        }
+
+        [Test]
+        public void RFIDEventhandler_stateAvailable_ShowMessageIsCalled()
+        {
+
+        }
 
         //Door handler tests
         [Test]

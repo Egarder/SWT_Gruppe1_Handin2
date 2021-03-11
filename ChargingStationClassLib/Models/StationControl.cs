@@ -48,6 +48,10 @@ namespace ChargingStationClassLib.Models
 
         private string message = "";
         public double ChargeWatt { get; set; }
+        public int OldId
+        {
+            get { return _oldId; }
+        }
 
 
         private void RFIDDetectedHandleEvent(Object o, ScanEventArgs e)
