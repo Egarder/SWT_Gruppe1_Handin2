@@ -15,38 +15,49 @@ namespace ChargingStation.Test.Unit
         private LogFile _uut;
         private StreamReader _reader;
         private string _fileName;
+        private StringBuilder _sb;
+        private string _line;
         [SetUp]
         public void Setup()
         {
             _uut = new LogFile(_fileName);
             _reader = new StreamReader(_fileName);
+
         }
 
+        [TestCase("Denne linje er flot")]
+        [TestCase("Denne linje er lang")]
+        public void WriteToFile_1TimeDifferentStrings_FileExists(string text)
+        {
+            _uut.WriteToFile(text);
+            Assert.That(File.Exists(_fileName), Is.EqualTo(true));
+        }
 
         [TestCase("Denne linje er flot")]
         [TestCase("Denne linje er lang")]
         public void WriteToFile_1TimeDifferentStrings_CorrectTextWrittenToFile(string text)
         {
             _uut.WriteToFile(text);
-  
-
+            Assert.That(_reader.ReadLine(),Is.EqualTo(text));
         }
 
-        //Functional tests
-        [Test]
-        public void CardIDPropertySetGet_ValueIsSet()
+        [TestCase("Denne linje er flot", "Denne linje er lang")]
+        [TestCase("Denne linje er lang", "Denne linje er lang")]
+        public void WriteToFile_MultipleTimesDifferentStrings_CorrectTextWrittenToFile(string text1,string text2)
         {
-            _uut.CardID = 50;
+            //act on file
+            _uut.WriteToFile(text1);
+            _uut.WriteToFile(text2);
 
-            Assert.That(_uut.CardID, Is.EqualTo(50));
+            //read on file
+            string str = _reader.ReadToEnd();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(str, Contains.Substring(text1));
+                Assert.That(str, Contains.Substring(text2));
+            });
         }
 
-        [Test]
-        public void SetCardID_ToNewID_CorrectIDReceived()
-        {
-            _uut.CardID = 50;
-
-            Assert.That(_receivedScanEventArgs.ID, Is.EqualTo(50));
-        }
     }
 }

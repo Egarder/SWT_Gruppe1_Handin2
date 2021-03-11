@@ -40,7 +40,7 @@ namespace ChargingStationClassLib.Models
         public async Task WriteToFileTask(string text)
         {
             await using StreamWriter file = new(FileName, append: true);
-            await file.WriteLineAsync(DateTime.Now.ToShortDateString() + ": " + text);
+            await file.WriteLineAsync(DateTime.Now + ": " + text);
         }
 
         public string FileName { get; set; }
