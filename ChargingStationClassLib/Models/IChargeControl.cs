@@ -6,6 +6,5 @@ namespace ChargingStationClassLib.Models
     {
         bool IsConnected();
         void StartCharge();
-        void StopCharge();
     }
 }
