@@ -3,7 +3,7 @@ using ChargingStationClassLib.Models;
 
 namespace ChargingStationConsoleApp
 {
-    class Program
+    class Simulator
     {
         static void Main(string[] args)
         {
