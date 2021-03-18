@@ -122,11 +122,6 @@ namespace ChargingStationClassLib.Models
                             }
                         }
 
-                        else if (_state == ChargingStationState.Locked)
-                        {
-                            _state = ChargingStationState.Available;
-                        }
-
                         break;
 
 
@@ -158,7 +153,5 @@ namespace ChargingStationClassLib.Models
             _display.ShowMessage(message);
             _log.WriteToLog(message, TimeStamp);
         }
-
-
     }
 }
