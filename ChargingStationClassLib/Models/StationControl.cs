@@ -75,7 +75,7 @@ namespace ChargingStationClassLib.Models
             {
                 if (_oldId == e.ID)
                 {
-                    _usbCharger.StopCharge();
+                    _chargeControl.StopCharge();
                     message = "ID Scanned and approved";
                     _door.UnlockDoor();
                     _state = ChargingStationState.Available;
