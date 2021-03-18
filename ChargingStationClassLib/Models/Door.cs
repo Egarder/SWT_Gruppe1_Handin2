@@ -20,7 +20,7 @@ namespace ChargingStationClassLib.Models
 
         public Door()
         {
-            Locked = true;
+            Locked = false;
             Closed = true;
         }
 

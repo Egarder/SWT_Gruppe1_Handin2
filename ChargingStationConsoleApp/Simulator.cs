@@ -45,8 +45,15 @@ namespace ChargingStationConsoleApp
                         break;
 
                     case 'P':
-                        usbCharger.Connected = true;
-                        Console.WriteLine("Phone connected");
+                        if (door.Closed)
+                            Console.WriteLine("Cant connect phone when door is closed");
+                        else
+                        {
+                            stationController.State = StationControl.ChargingStationState.Opened;
+                            usbCharger.Connected = true;
+                            Console.WriteLine("Phone connected");
+                        }
+
                         break;
                     default:
                         break;

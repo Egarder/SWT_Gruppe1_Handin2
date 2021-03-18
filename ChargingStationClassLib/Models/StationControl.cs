@@ -63,7 +63,7 @@ namespace ChargingStationClassLib.Models
 
         private void RFIDDetectedHandleEvent(Object o, ScanEventArgs e)
         {
-            if (_state == ChargingStationState.Available)
+            if (_state == ChargingStationState.Available && _door.Closed)
             {
                 message = $"ID: {e.ID} scanned.";
                 _oldId = e.ID;
@@ -85,6 +85,7 @@ namespace ChargingStationClassLib.Models
                 if (_oldId == e.ID)
                 {
                     _chargeControl.StopCharge();
+                    message = "Charging stoppped";
                     message = "ID Scanned and approved";
                     _door.UnlockDoor();
                     _state = ChargingStationState.Available;
@@ -96,21 +97,29 @@ namespace ChargingStationClassLib.Models
             else if (_state == ChargingStationState.Opened)
                 message = "Please close the door";
 
+            else
+                message = "Please connect phone";
+
             _display.ShowMessage(message);
             _log.WriteToLog(message, TimeStamp);
         }
         
         private void DoorClosedHandleEvent(object o, DoorMoveEventArgs door)
         {
-            if (_oldId < 0)
+            if (door.HasClosed)
+            {
+                _state = ChargingStationState.Available;
                 message = "Please scan card";
+            }
+
+            else if (_state == ChargingStationState.Locked)
+            {
+
+                message = "Station already in use";
+            }
 
             else
-            {
-                if (door.HasClosed)
-                    message = "Please scan card";
-
-            }
+                _state = ChargingStationState.Opened;
 
             _display.ShowMessage(message);
             _log.WriteToLog(message, TimeStamp);
@@ -122,16 +131,18 @@ namespace ChargingStationClassLib.Models
             ChargeWatt = CEA.Current;
 
             if (ChargeWatt > 0 && ChargeWatt <= 5)
+            {
                 message = "Phone fully charged";
+                _display.ShowMessage(message);
+                _log.WriteToLog(message, TimeStamp);
+            }
 
             else if (ChargeWatt > 500)
+            {
                 message = "ERROR! Faulty Charger!";
-
-            else
-                message = "Charging";
-
-            _display.ShowMessage(message);
-            _log.WriteToLog(message, TimeStamp);
+                _display.ShowMessage(message);
+                _log.WriteToLog(message, TimeStamp);
+            }
         }
     }
 }
