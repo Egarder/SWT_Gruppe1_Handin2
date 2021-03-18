@@ -31,7 +31,7 @@ namespace ChargingStation.Test.Unit
             _display = Substitute.For<IDisplay>();
             _chargecontrol = new ChargeControl(_usbccharge);
 
-            _uut = new StationControl(_door, _logfile, _rfid, _chargecontrol, _usbccharge, _display); //Injects including fakes
+            _uut = new StationControl(_door, _logfile, _rfid, _chargecontrol, _usbccharge, _display); //Injects fakes
         }
 
 
