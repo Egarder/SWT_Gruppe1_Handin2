@@ -84,10 +84,12 @@ namespace ChargingStationClassLib.Models
             {
                 if (_oldId == e.ID)
                 {
+                    _usbCharger.Connected = false;
                     _chargeControl.StopCharge();
-                    message = "ID Scanned and approved - Charging stopped";
+                    OldId = -1;
                     _door.UnlockDoor();
                     _state = ChargingStationState.Available;
+                    message = "ID Scanned and approved - Charging stopped";
                 }
                 else
                     message = "ID scanned - Closet already in use";

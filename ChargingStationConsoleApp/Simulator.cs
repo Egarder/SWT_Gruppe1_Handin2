@@ -41,7 +41,7 @@ namespace ChargingStationConsoleApp
                         break;
 
                     case 'R':
-                        rfidReader.CardID = 1234;
+                        rfidReader.CardID = int.Parse(Console.ReadLine());
                         break;
 
                     case 'P':
