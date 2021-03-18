@@ -22,7 +22,7 @@ namespace ChargingStation.Test.Unit
             _uut.ScanEvent += (o, args) => { _receivedScanEventArgs = args; };
         }
 
-        //Functional tests
+        //=============== Functional tests ====================
         [Test]
         public void CardIDPropertySetGet_ValueIsSet()
         {
@@ -40,7 +40,7 @@ namespace ChargingStation.Test.Unit
         }
 
 
-        //Behavioral tests
+        //===============  Behavioral tests ====================
 
         [Test]
         public void SetCardID_ToNewID_EventTriggered()
