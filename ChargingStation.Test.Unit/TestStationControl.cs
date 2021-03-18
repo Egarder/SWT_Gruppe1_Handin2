@@ -238,19 +238,6 @@ namespace ChargingStation.Test.Unit
             Assert.That(_uut.State, Is.EqualTo(StationControl.ChargingStationState.Opened));
         }
 
-        [Test]
-        public void CloseDoor_InLockedState_StateChangedToAvailable()
-        {
-            // Arrange
-            _uut.OldId = 1234;
-            _uut.State = StationControl.ChargingStationState.Locked;
-
-            // Act
-            _door.DoorMoveEvent += Raise.EventWith(this, new DoorMoveEventArgs() { HasClosed = true });
-
-            // Assert
-            Assert.That(_uut.State, Is.EqualTo(StationControl.ChargingStationState.Available));
-        }
 
         //Carge handler tests
     [Test]
