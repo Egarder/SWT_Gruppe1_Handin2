@@ -31,12 +31,9 @@ namespace ChargingStationClassLib.Models
             {
                 if (value >= 0)
                 {
-                    if (value != cardID)
-                    {
-                        Error = false;
-                        OnScanEvent(new ScanEventArgs { ID = value }); //Notifies when cardID is set
-                        cardID = value;
-                    }
+                    Error = false;
+                    OnScanEvent(new ScanEventArgs { ID = value }); //Notifies when cardID is set
+                    cardID = value;
                 }
                 else
                     Error = idError();
