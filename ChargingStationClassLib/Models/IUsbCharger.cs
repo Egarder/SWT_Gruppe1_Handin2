@@ -20,6 +20,7 @@ namespace ChargingStationClassLib.Models
         // Require connection status of the phone
         bool Connected { get; set; }
 
+
         // Start charging
         void StartCharge();
         // Stop charging

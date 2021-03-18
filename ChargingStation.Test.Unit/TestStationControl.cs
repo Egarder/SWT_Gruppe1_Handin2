@@ -88,7 +88,7 @@ namespace ChargingStation.Test.Unit
 
             _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
 
-            _display.Received(1).ShowMessage("ID Scanned and approved");
+            _display.Received(1).ShowMessage("ID Scanned and approved - Charging stopped");
         }
 
         [TestCase(50)]
@@ -130,7 +130,7 @@ namespace ChargingStation.Test.Unit
 
             _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
 
-            _display.Received(1).ShowMessage("Please close the door");
+            _display.Received(1).ShowMessage("Door not closed");
         }
 
 
@@ -139,7 +139,8 @@ namespace ChargingStation.Test.Unit
         public void DoorClosed_Message_CorrectMessage()
         {
             _door.DoorMoveEvent += Raise.EventWith(new DoorMoveEventArgs {HasClosed = true});
-            _display.Received(1).ShowMessage("Please scan card");
+            _display.Received(1).ShowMessage("Door closed");
+            _logfile.Received(1).WriteToLog("Door closed", DateTime.MinValue);
         }
 
 
@@ -159,7 +160,7 @@ namespace ChargingStation.Test.Unit
 
         //Carge handler tests
     [Test]
-        public void ChargeChanged_CurrentUnderFiveShowMessage_ShowMessage()
+        public void ChargeChanged_CurrentUnderFiveShowMessage_DisplayAndLogCalledWithCorrectMessage()
         {
             _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
             _display.Received(1).ShowMessage("Phone fully charged");
