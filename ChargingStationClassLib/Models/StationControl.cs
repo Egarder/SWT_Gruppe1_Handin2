@@ -65,10 +65,19 @@ namespace ChargingStationClassLib.Models
         {
             if (_state == ChargingStationState.Available)
             {
-                message = $"ID: {e.ID} scanned. Please Open Door";
+                message = $"ID: {e.ID} scanned.";
                 _oldId = e.ID;
-                _door.UnlockDoor();
-                _display.ShowMessage(message);
+
+                if (_usbCharger.Connected)
+                {
+                    _state = ChargingStationState.Locked;
+                    _door.LockDoor();
+                    _chargeControl.StartCharge();
+                    message = "Charging started";
+                }
+                else
+                    message = "Please connect phone";
+
             }
 
             else if (_state == ChargingStationState.Locked)
@@ -82,55 +91,25 @@ namespace ChargingStationClassLib.Models
                 }
                 else
                     message = "ID scanned - Closet already in use";
-
-                _display.ShowMessage(message);
-                _log.WriteToLog(message,TimeStamp);
             }
 
-            else
-            {
+            else if (_state == ChargingStationState.Opened)
                 message = "Please close the door";
-                _display.ShowMessage(message);
-            }
-        }
 
+            _display.ShowMessage(message);
+            _log.WriteToLog(message, TimeStamp);
+        }
+        
         private void DoorClosedHandleEvent(object o, DoorMoveEventArgs door)
         {
             if (_oldId < 0)
-            {
                 message = "Please scan card";
-            }
 
             else
             {
-                switch (door.HasClosed)
-                {
-                    case true:
+                if (door.HasClosed)
+                    message = "Please scan card";
 
-                        if (_state == ChargingStationState.Opened)
-                        {
-                            if (_usbCharger.Connected)
-                            {
-                                _door.LockDoor();
-                                _chargeControl.StartCharge();
-                                _state = ChargingStationState.Locked;
-                                message = "Charging started";
-                            }
-
-                            else
-                            {
-                                message = "Please connect phone";
-                            }
-                        }
-
-                        break;
-
-
-                    case false:
-                        _state = ChargingStationState.Opened;
-                        message = "Door Opened. Please Connect Phone";
-                        break;
-                }
             }
 
             _display.ShowMessage(message);
