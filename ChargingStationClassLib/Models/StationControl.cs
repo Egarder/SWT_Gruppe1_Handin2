@@ -111,11 +111,6 @@ namespace ChargingStationClassLib.Models
                 message = "Door closed";
             }
 
-            else if (_state == ChargingStationState.Locked)
-            {
-                message = "Someone tried to open door while station was in use";
-            }
-
             else
                 _state = ChargingStationState.Opened;
 

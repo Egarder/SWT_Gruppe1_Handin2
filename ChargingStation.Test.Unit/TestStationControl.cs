@@ -133,6 +133,28 @@ namespace ChargingStation.Test.Unit
             _display.Received(1).ShowMessage("Door not closed");
         }
 
+        [TestCase(50)]
+        public void RFIDEventhandler_StateAvailableDoorClosedChargerConnected_StateChanged(int id)
+        {
+            _door.Closed = true;
+            _usbccharge.Connected = true;
+
+            _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
+
+            Assert.That(_uut.State, Is.EqualTo(StationControl.ChargingStationState.Locked));
+        }
+
+        [TestCase(50)]
+        public void RFIDEventhandler_StateAvailableDoorClosedChargerConnected_DoorLocked(int id)
+        {
+            _door.Closed = true;
+            _usbccharge.Connected = true;
+
+            _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
+
+            _door.Received(1).LockDoor();
+        }
+
 
         // Door handler tests
         [Test]
@@ -159,7 +181,7 @@ namespace ChargingStation.Test.Unit
 
 
         //Carge handler tests
-    [Test]
+        [Test]
         public void ChargeChanged_CurrentUnderFiveShowMessage_DisplayAndLogCalledWithCorrectMessage()
         {
             _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
