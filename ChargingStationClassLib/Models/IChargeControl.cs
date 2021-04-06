@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ChargingStationClassLib.Models
+﻿namespace ChargingStationClassLib.Models
 {
     public interface IChargeControl
     {
