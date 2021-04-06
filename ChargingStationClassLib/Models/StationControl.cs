@@ -76,7 +76,7 @@ namespace ChargingStationClassLib.Models
                     message = "Charging started";
                 }
                 else
-                    message = "Please connect phone";
+                    message = "Phone not connected";
 
             }
 
@@ -84,21 +84,22 @@ namespace ChargingStationClassLib.Models
             {
                 if (_oldId == e.ID)
                 {
+                    _usbCharger.Connected = false;
                     _chargeControl.StopCharge();
-                    message = "Charging stoppped";
-                    message = "ID Scanned and approved";
+                    OldId = -1;
                     _door.UnlockDoor();
                     _state = ChargingStationState.Available;
+                    message = "ID Scanned and approved - Charging stopped";
                 }
                 else
                     message = "ID scanned - Closet already in use";
             }
 
             else if (_state == ChargingStationState.Opened)
-                message = "Please close the door";
+                message = "Door not closed";
 
             else
-                message = "Please connect phone";
+                message = "Phone not connected";
 
             _display.ShowMessage(message);
             _log.WriteToLog(message, TimeStamp);
@@ -109,13 +110,7 @@ namespace ChargingStationClassLib.Models
             if (door.HasClosed)
             {
                 _state = ChargingStationState.Available;
-                message = "Please scan card";
-            }
-
-            else if (_state == ChargingStationState.Locked)
-            {
-
-                message = "Station already in use";
+                message = "Door closed";
             }
 
             else

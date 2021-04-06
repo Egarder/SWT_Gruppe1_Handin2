@@ -88,7 +88,7 @@ namespace ChargingStation.Test.Unit
 
             _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
 
-            _display.Received(1).ShowMessage("ID Scanned and approved");
+            _display.Received(1).ShowMessage("ID Scanned and approved - Charging stopped");
         }
 
         [TestCase(50)]
@@ -130,94 +130,63 @@ namespace ChargingStation.Test.Unit
 
             _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
 
-            _display.ShowMessage("Please close the door");
+            _display.Received(1).ShowMessage("Door not closed");
         }
 
-        //Door handler tests
+        [TestCase(50)]
+        public void RFIDEventhandler_StateAvailableDoorClosedChargerConnected_StateChanged(int id)
+        {
+            _door.Closed = true;
+            _usbccharge.Connected = true;
 
-        //[Test]
-        //public void OpenDoor_RfidNotScanned_WriteToDisplayAndWriteToLog()
-        //{
-        //    // Act
-        //    _door.DoorMoveEvent += Raise.EventWith(this, new DoorMoveEventArgs() {HasClosed = false});
+            _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
 
-        //    // Assert
-        //    _display.Received(1).ShowMessage("Please scan card");
-        //    _logfile.Received(1).WriteToLog("Please scan card", DateTime.MinValue);
-        //}
+            Assert.That(_uut.State, Is.EqualTo(StationControl.ChargingStationState.Locked));
+        }
 
-        //[Test]
-        //public void OpenDoor_RfidScanned_WriteToDisplayAndWriteToLog()
-        //{
-        //    // Act
-        //    _rfid.ScanEvent += Raise.EventWith(this, new ScanEventArgs() { ID = 1234 });
-        //    _door.DoorMoveEvent += Raise.EventWith(this, new DoorMoveEventArgs() { HasClosed = false });
+        [TestCase(50)]
+        public void RFIDEventhandler_StateAvailableDoorClosedChargerConnected_DoorLockedCalled(int id)
+        {
+            _door.Closed = true;
+            _usbccharge.Connected = true;
 
-        //    // Assert
-        //    _display.Received(1).ShowMessage("Door Opened. Please Connect Phone");
-        //    _logfile.Received(1).WriteToLog("Door Opened. Please Connect Phone", DateTime.MinValue);
-        //}
+            _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
 
-        //[Test]
-        //public void CloseDoor_InOpenedState_PhoneNotConnected_WriteToDisplayAndWriteToLog()
-        //{
-        //    // Arrange
-        //    _uut.OldId = 1234;
-        //    _uut.State = StationControl.ChargingStationState.Opened;
-            
-        //    // Act
-        //    _door.DoorMoveEvent += Raise.EventWith(this, new DoorMoveEventArgs() { HasClosed = true });
+            _door.Received(1).LockDoor();
+        }
 
-        //    // Assert
-        //    _display.Received(1).ShowMessage("Please connect phone");
-        //    _logfile.Received(1).WriteToLog("Please connect phone", DateTime.MinValue);
-        //}
+        [TestCase(50)]
+        public void RFIDEventhandler_StateAvailableDoorClosedChargerConnected_StartChargeCalled(int id)
+        {
+            _door.Closed = true;
+            _usbccharge.Connected = true;
 
-        //[Test]
-        //public void CloseDoor_InOpenedState_PhoneConnected_WriteToDisplayAndWriteToLog()
-        //{
-        //    // Arrange
-        //    _uut.OldId = 1234;
-        //    _usbccharge.Connected = true;
-        //    _uut.State = StationControl.ChargingStationState.Opened;
+            _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
 
-        //    // Act
-        //    _door.DoorMoveEvent += Raise.EventWith(this, new DoorMoveEventArgs() { HasClosed = true });
+            _usbccharge.Received(1).StartCharge();
+        }
 
-        //    // Assert
-        //    _display.Received(1).ShowMessage("Charging started");
-        //    _logfile.Received(1).WriteToLog("Charging started", DateTime.MinValue);
-        //}
+        [TestCase(50)]
+        public void RFIDEventhandler_StateAvailableDoorClosedChargerConnected_LogAndDisplayCalledWithCorrectMessage(int id)
+        {
+            _door.Closed = true;
+            _usbccharge.Connected = true;
 
-        //[Test]
-        //public void CloseDoor_InOpenedState_PhoneConnected_StartChargeCalled()
-        //{
-        //    // Arrange
-        //    _uut.OldId = 1234;
-        //    _usbccharge.Connected = true;
-        //    _uut.State = StationControl.ChargingStationState.Opened;
+            _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
 
-        //    // Act
-        //    _door.DoorMoveEvent += Raise.EventWith(this, new DoorMoveEventArgs() { HasClosed = true });
+            _display.Received(1).ShowMessage("Charging started");
+            _logfile.Received(1).WriteToLog("Charging started", DateTime.MinValue);
+        }
 
-        //    // Assert
-        //    _usbccharge.Received(1).StartCharge();
-        //}
+        // Door handler tests
+        [Test]
+        public void DoorClosed_Message_CorrectMessage()
+        {
+            _door.DoorMoveEvent += Raise.EventWith(new DoorMoveEventArgs {HasClosed = true});
+            _display.Received(1).ShowMessage("Door closed");
+            _logfile.Received(1).WriteToLog("Door closed", DateTime.MinValue);
+        }
 
-        //[Test]
-        //public void CloseDoor_InOpenedState_PhoneConnected_StateChangedToLocked()
-        //{
-        //    // Arrange
-        //    _uut.OldId = 1234;
-        //    _usbccharge.Connected = true;
-        //    _uut.State = StationControl.ChargingStationState.Opened;
-
-        //    // Act
-        //    _door.DoorMoveEvent += Raise.EventWith(this, new DoorMoveEventArgs() { HasClosed = true });
-
-        //    // Assert
-        //    Assert.That(_uut.State, Is.EqualTo(StationControl.ChargingStationState.Locked));
-        //}
 
         [Test]
         public void OpenDoor_InAvailableState_StateChangedToOpened()
@@ -234,8 +203,8 @@ namespace ChargingStation.Test.Unit
 
 
         //Carge handler tests
-    [Test]
-        public void ChargeChanged_CurrentUnderFiveShowMessage_ShowMessage()
+        [Test]
+        public void ChargeChanged_CurrentUnderFiveShowMessage_DisplayAndLogCalledWithCorrectMessage()
         {
             _usbccharge.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
             _display.Received(1).ShowMessage("Phone fully charged");
