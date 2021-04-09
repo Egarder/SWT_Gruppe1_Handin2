@@ -30,9 +30,6 @@ namespace ChargingStation.Test.Unit
         [Test]
         public void DoorUnlockedAndOpened_OpenDoor_EventRaised()
         {
-            // Arrange
-            _door.Locked = false;
-
             // Act
             _door.OpenDoor();
             
@@ -43,9 +40,6 @@ namespace ChargingStation.Test.Unit
         [Test]
         public void DoorUnlocked_OpenDoor_EventRaised()
         {
-            // Arrange
-            _door.Locked = false;
-
             // Act
             _door.OpenDoor();
             
@@ -56,10 +50,8 @@ namespace ChargingStation.Test.Unit
         [Test]
         public void DoorClosed_OpenDoor_AssertDoorMoveEvent_Raised()
         {
-            // Arrange
-            _door.Closed = false;
-
             // Act
+            _door.OpenDoor();
             _door.CloseDoor();
             
             // Assert
@@ -69,10 +61,8 @@ namespace ChargingStation.Test.Unit
         [Test]
         public void DoorOpen_CloseDoor_DoorHasClosed()
         {
-            // Arrange - Door has to be open before it can close
-            _door.Closed = false;
-            
             // Act
+            _door.OpenDoor();
             _door.CloseDoor();
             
             // Assert
@@ -82,11 +72,8 @@ namespace ChargingStation.Test.Unit
         [Test]
         public void DoorOpen_LockDoor_DoorNotLocked()
         {
-            // Arrange
-            _door.Closed = false;
-            _door.Locked = false;
-
             // Act
+            _door.OpenDoor();
             _door.LockDoor();
 
             // Assert
@@ -96,10 +83,6 @@ namespace ChargingStation.Test.Unit
         [Test]
         public void DoorClosedAndNotLocked_LockDoor_DoorLocked()
         {
-            // Arrange - Door has to be open before it can close
-            _door.Closed = true;
-            _door.Locked = false;
-
             // Act
             _door.LockDoor();
 
@@ -107,26 +90,11 @@ namespace ChargingStation.Test.Unit
             Assert.That(_door.Locked, Is.EqualTo(true));
         }
 
-        //[Test]
-        //public void DoorLockedAndDoorOpen_UnLockDoor_DoorNotUnlocked()
-        //{
-        //    // Arrange
-        //    _door.Closed = false;
-        //    _door.Locked = true;
-
-        //    // Act
-        //    _door.UnlockDoor();
-
-        //    // Assert
-        //    Assert.That(_door.Locked, Is.EqualTo(true));
-        //}
-
         [Test]
         public void DoorLockedAndClosed_UnLockDoor_DoorUnlocked()
         {
             // Arrange - Door has to be open before it can close
-            _door.Closed = true;
-            _door.Locked = true;
+            _door.LockDoor();
 
             // Act
             _door.UnlockDoor();
