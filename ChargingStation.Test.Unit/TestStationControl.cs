@@ -156,6 +156,16 @@ namespace ChargingStation.Test.Unit
         }
 
         [TestCase(50)]
+        public void RFIDEventhandler_StateAvailableDoorClosedChargerConnected_StartChargeCalled(int id)
+        {
+            _door.Closed = true;
+            _usbccharge.Connected = true;
+            _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
+
+            _chargecontrol.Received(1).StartCharge();
+        }
+
+        [TestCase(50)]
         public void RFIDEventhandler_StateAvailableDoorClosedChargerConnected_LogAndDisplayCalledWithCorrectMessage(int id)
         {
             _door.Closed = true;
