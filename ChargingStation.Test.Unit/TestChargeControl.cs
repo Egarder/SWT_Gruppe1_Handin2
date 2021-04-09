@@ -28,17 +28,22 @@ namespace ChargingStation.Test.Unit
         //så vil den kalde sin StopCharge, som så kalder USBChargers stop charge, så nu 
         //testes den hele vejen ned fra event, chargecontrol og usbcharger, så fordi testen
         //godkendes er der den vej testet at det rigtige kaldes
-
-        [Test]
-        public void ChargeChanged_UnderFiveStopCharge_StopsCharge()
+        //Her benyttes BVA til test
+        [TestCase(4.999999)]
+        [TestCase(5)]
+        [TestCase(0.0000001)]
+        public void ChargeChanged_UnderFiveStopCharge_StopsCharge(double current)
         {
-            _usbChargerSource.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 2 });
+            _usbChargerSource.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = current });
             _usbChargerSource.Received(1).StopCharge();
         }
-        [Test]
-        public void ChargeChanged_OverFiveHundredStopCharge_StopsCharge()
+        [TestCase(500.001)]
+        [TestCase(505)]
+        [TestCase(10000000)]
+        [TestCase(1000)]
+        public void ChargeChanged_OverFiveHundredStopCharge_StopsCharge(double current)
         {
-            _usbChargerSource.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = 505 });
+            _usbChargerSource.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = current });
             _usbChargerSource.Received(1).StopCharge();
         }
 
