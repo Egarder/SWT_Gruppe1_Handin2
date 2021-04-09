@@ -42,6 +42,13 @@ namespace ChargingStation.Test.Unit
             _usbChargerSource.Received(1).StopCharge();
         }
 
+        [Test]
+        public void StartCharge__chargerStartCharge_IsCalled()
+        {
+            _uut.StartCharge();
+            _usbChargerSource.Received(1).StartCharge();
+        }
+
         [TestCase(false)]
         [TestCase(true)]
         public void IsConnected_ChargerConnectedTrue_ReturnsTrue(bool testBool)
