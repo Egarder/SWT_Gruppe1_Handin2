@@ -47,6 +47,17 @@ namespace ChargingStation.Test.Unit
             _usbChargerSource.Received(1).StopCharge();
         }
 
+
+        [TestCase(5.0001)]
+        [TestCase(10)]
+        [TestCase(450)]
+        [TestCase(499.999)]
+        public void ChargeChanged_Over5Under500_StopChargeNotCalled(double current)
+        {
+            _usbChargerSource.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = current });
+            _usbChargerSource.Received(0).StopCharge();
+        }
+
         [Test]
         public void StartCharge__chargerStartCharge_IsCalled()
         {
