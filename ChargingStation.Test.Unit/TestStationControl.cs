@@ -29,7 +29,7 @@ namespace ChargingStation.Test.Unit
             _rfid = Substitute.For<IRFIDReader>();
             _usbccharge = Substitute.For<IUsbCharger>();
             _display = Substitute.For<IDisplay>();
-            _chargecontrol = new ChargeControl(_usbccharge);
+            _chargecontrol = Substitute.For<IChargeControl>();
 
             _uut = new StationControl(_door, _logfile, _rfid, _chargecontrol, _usbccharge, _display); //Injects fakes
         }
@@ -153,17 +153,6 @@ namespace ChargingStation.Test.Unit
             _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
 
             _door.Received(1).LockDoor();
-        }
-
-        [TestCase(50)]
-        public void RFIDEventhandler_StateAvailableDoorClosedChargerConnected_StartChargeCalled(int id)
-        {
-            _door.Closed = true;
-            _usbccharge.Connected = true;
-
-            _rfid.ScanEvent += Raise.EventWith(new ScanEventArgs { ID = id });
-
-            _usbccharge.Received(1).StartCharge();
         }
 
         [TestCase(50)]
