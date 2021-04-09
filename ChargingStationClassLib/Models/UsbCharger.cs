@@ -44,7 +44,7 @@ namespace ChargingStationClassLib.Models
                 if (Connected && !_overload)
                 {
                     double newValue = MaxCurrent - 
-                                      _ticksSinceStart * (MaxCurrent - FullyChargedCurrent) / (ChargeTimeMinutes * 60 * 1000 / CurrentTickInterval);
+                                      _ticksSinceStart * (MaxCurrent - FullyChargedCurrent) / ((double)ChargeTimeMinutes * 60 * 1000 / CurrentTickInterval);
                     CurrentValue = Math.Max(newValue, FullyChargedCurrent);
                 }
                 else if (Connected && _overload)
