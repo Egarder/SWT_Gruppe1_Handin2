@@ -29,7 +29,7 @@ namespace ChargingStationClassLib.Models
         private void ChargerHandleEvent(object sender, ChargerEventArgs CEA)
         {
             ChargeWatt = CEA.Current;
-            if(ChargeWatt >0 && ChargeWatt<=5)
+            if(ChargeWatt<=5)
             {
                 StopCharge();
             }

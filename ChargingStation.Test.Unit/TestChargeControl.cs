@@ -32,6 +32,9 @@ namespace ChargingStation.Test.Unit
         [TestCase(4.999999)]
         [TestCase(5)]
         [TestCase(0.0000001)]
+        [TestCase(-100000)]
+        [TestCase(-1)]
+        [TestCase(0)]
         public void ChargeChanged_UnderFiveStopCharge_StopsCharge(double current)
         {
             _usbChargerSource.ChargeEvent += Raise.EventWith(new ChargerEventArgs { Current = current });
